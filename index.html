@@ -1,30 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peluquería BarberX</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BarberX — Inicio</title>
+    <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" href="index.html">BarberX</a>
+            <nav class="main-nav" id="mainNav">
+                <a href="index.html">Inicio</a>
+                <a href="productos.html">Productos</a>
+                <a href="citas.html">Agendar Cita</a>
+            </nav>
+            <button class="nav-toggle" aria-controls="mainNav" aria-expanded="false">☰</button>
+        </div>
+    </header>
 
-<header>
-    <h1>BarberX</h1>
-    <nav>
-        <a href="index.html">Inicio</a>
-        <a href="productos.html">Productos</a>
-        <a href="citas.html">Agendar Cita</a>
-    </nav>
-</header>
+    <main>
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-text">
+                    <h1>Tu look, nuestro estilo</h1>
+                    <p>Los mejores cortes, productos y atención para que te veas y te sientas increíble.</p>
+                    <div class="hero-cta">
+                        <a class="btn" href="productos.html">Ver productos</a>
+                        <a class="btn ghost" href="citas.html">Agendar cita</a>
+                    </div>
+                </div>
+                <div class="hero-image" aria-hidden="true"></div>
+            </div>
+        </section>
 
-<section class="hero">
-    <h2>Tu look, nuestro estilo</h2>
-    <p>Los mejores cortes y productos para tu cuidado personal.</p>
-</section>
+        <section class="container section featured">
+            <h2>Productos destacados</h2>
+            <div id="featured-products" class="products-grid"></div>
+            <div class="center"><a class="btn" href="productos.html">Ver todos los productos</a></div>
+        </section>
 
-<footer>
-    <p>© 2024 BarberX</p>
-</footer>
+        <section class="container section about">
+            <div class="two-col">
+                <div>
+                    <h3>Más de 10 años creando estilo</h3>
+                    <p>En BarberX nos enfocamos en resultados profesionales, productos de calidad y una experiencia única.</p>
+                </div>
+                <div>
+                    <h3>Productos seleccionados</h3>
+                    <p>Solo trabajamos con marcas, aceites, ceras y shampoos que cuidan tu piel y cabello.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div>© <span id="year"></span> BarberX</div>
+            <div class="socials">
+                <a href="#" aria-label="Instagram">IG</a>
+                <a href="#" aria-label="WhatsApp">WA</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Product Quick View Modal -->
+    <div id="productModal" class="modal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <button class="modal-close" id="modalClose" aria-label="Cerrar">×</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+    </script>
 </body>
 </html>
+
