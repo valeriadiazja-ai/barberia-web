@@ -8,7 +8,7 @@ const PRODUCTS = [
         title: 'Cera para cabello',
         price: 25000,
         category: 'cabello',
-        img: 'img/cera.gpg.jpg',
+        img: 'img/cera.jpg',
         desc: 'Textura fuerte, acabado mate. 100ml.'
     },
     {
