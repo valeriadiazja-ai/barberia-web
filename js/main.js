@@ -8,7 +8,7 @@ const PRODUCTS = [
         title: 'Cera para cabello',
         price: 25000,
         category: 'cabello',
-        img: 'https://images.unsplash.com/photo-1585238342026-9ab1f8a03d1a?auto=format&fit=crop&w=800&q=60',
+        img: 'https://i.imgur.com/z3I8x7K.jpeg',
         desc: 'Textura fuerte, acabado mate. 100ml.'
     },
     {
@@ -16,7 +16,7 @@ const PRODUCTS = [
         title: 'Aceite para barba',
         price: 30000,
         category: 'barba',
-        img: 'https://images.unsplash.com/photo-1543352634-2f7b7b5b60f6?auto=format&fit=crop&w=800&q=60',
+        img: 'https://i.imgur.com/VWft8r6.jpeg',
         desc: 'Suaviza, protege y da brillo natural.'
     },
     {
@@ -24,7 +24,7 @@ const PRODUCTS = [
         title: 'Shampoo anticaspa',
         price: 22000,
         category: 'cabello',
-        img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=60',
+        img: 'https://i.imgur.com/Is4X3kB.jpeg',
         desc: 'Limpieza profunda y control de caspa.'
     },
     {
@@ -32,7 +32,7 @@ const PRODUCTS = [
         title: 'Bálsamo aftershave',
         price: 18000,
         category: 'piel',
-        img: 'https://images.unsplash.com/photo-1580281657528-9d6d6c2f9b01?auto=format&fit=crop&w=800&q=60',
+        img: 'https://i.imgur.com/26mTKdX.jpeg',
         desc: 'Calma la piel tras el afeitado.'
     },
     {
@@ -40,7 +40,7 @@ const PRODUCTS = [
         title: 'Peine de madera',
         price: 12000,
         category: 'barba',
-        img: 'https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=800&q=60',
+        img: 'https://i.imgur.com/jIbhH0j.jpeg',
         desc: 'Peine ergonómico, ideal para barbas.'
     },
     {
@@ -48,7 +48,7 @@ const PRODUCTS = [
         title: 'Mascarilla capilar',
         price: 35000,
         category: 'cabello',
-        img: 'https://images.unsplash.com/photo-1600180758894-4f8641f5b7c7?auto=format&fit=crop&w=800&q=60',
+        img: 'https://i.imgur.com/wO8gUuE.jpeg',
         desc: 'Hidratación profunda y restauración.'
     }
 ];
