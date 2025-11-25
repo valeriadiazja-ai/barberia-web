@@ -10,8 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const grid = document.getElementById('product-list');
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    updateCartCount();
 
-    // Renderizar productos
     function renderProducts(list) {
         grid.innerHTML = list.map(p => `
             <div class="card product-card">
@@ -25,25 +26,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderProducts(products);
 
-    // Filtro por categoría
     document.getElementById('filterCategory').addEventListener('change', e => {
         const category = e.target.value;
         renderProducts(category==='all' ? products : products.filter(p=>p.category===category));
     });
 
-    // Buscador
     document.getElementById('searchInput').addEventListener('input', e => {
         const text = e.target.value.toLowerCase();
         renderProducts(products.filter(p => p.title.toLowerCase().includes(text)));
     });
 
-    // Carrito visual
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    updateCartCount();
-
     function updateCartCount(){
         document.getElementById('cartCount').innerText = cart.length;
         localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    // Abrir carrito
+    document.querySelector('.cart-icon').onclick = (e) => {
+        e.preventDefault();
+        openCartModal();
+    };
+
+    function openCartModal() {
+        let modal = document.querySelector('.cart-modal');
+        if(modal) modal.remove();
+
+        modal = document.createElement('div');
+        modal.className = 'cart-modal';
+        modal.innerHTML = `
+            <div class="cart-backdrop"></div>
+            <div class="cart-panel">
+                <button class="modal-close">×</button>
+                <h2>Carrito de Compras</h2>
+                <div class="cart-items">
+                    ${cart.map((p, i) => `
+                        <div class="cart-item">
+                            <img src="img/${p.img}" width="50" />
+                            <span>${p.title}</span>
+                            <span>${parseInt(p.price).toLocaleString()} COP</span>
+                            <button data-index="${i}" class="removeItem">Eliminar</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-total">
+                    Total: ${cart.reduce((acc,p)=>acc+parseInt(p.price),0).toLocaleString()} COP
+                </div>
+                <button id="checkoutBtn" class="btn success">Pagar</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        modal.querySelector('.cart-backdrop').onclick = () => modal.remove();
+        modal.querySelector('.modal-close').onclick = () => modal.remove();
+
+        modal.querySelectorAll('.removeItem').forEach(btn => {
+            btn.onclick = () => {
+                const idx = btn.dataset.index;
+                cart.splice(idx,1);
+                updateCartCount();
+                openCartModal();
+            };
+        });
+
+        modal.querySelector('#checkoutBtn').onclick = () => {
+            if(cart.length===0){ alert("Carrito vacío"); return; }
+            const p = cart[0];
+            window.location.href = `payment/pagar.html?ref=${p.id}&producto=${encodeURIComponent(p.title)}&valor=${p.price}&img=/img/${p.img}`;
+        };
     }
 
     // Modal de producto
@@ -90,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.querySelector('.modal-close').onclick = () => modal.remove();
         modal.querySelector('#btnCerrar').onclick = () => modal.remove();
 
-        // Comprar
         modal.querySelector('#btnComprar').onclick = () => {
             cart.push({id, title, price, img});
             updateCartCount();
@@ -98,11 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.remove();
         };
 
-        // Pagar
         modal.querySelector('#btnPagar').onclick = () => {
             const url = `payment/pagar.html?ref=${id}&producto=${encodeURIComponent(title)}&valor=${price}&img=/img/${img}`;
             window.location.href = url;
         };
     }
-
 });
