@@ -14,6 +14,8 @@
         .pay-form label { display:block; margin-top:10px; font-weight:bold; }
         .pay-form input { width:100%; padding:8px; margin-top:4px; border-radius:5px; border:1px solid #ccc; }
         .btn-pay { margin-top:15px; padding:10px 16px; border:none; border-radius:8px; background:linear-gradient(90deg,#f59e0b,#ef4444); color:white; cursor:pointer; font-weight:bold; }
+        .toast { display:none; position:fixed; top:20px; right:20px; background:#16a34a; color:white; padding:15px; border-radius:8px; z-index:9999; }
+        .toast.show { display:block; }
     </style>
 </head>
 <body>
@@ -44,6 +46,8 @@
             <input id="amountLabel" type="text" disabled>
             <button type="submit" class="btn-pay">Pagar ahora</button>
         </form>
+
+        <div id="toast" class="toast"></div>
     </main>
 
     <script src="pagar.js"></script>
