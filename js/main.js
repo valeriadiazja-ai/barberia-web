@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderProducts(list) {
         grid.innerHTML = list.map(p => `
             <div class="card product-card">
-                <img src="../img/${p.img}" alt="${p.title}" />
+                <img src="img/${p.img}" alt="${p.title}" />
                 <h3>${p.title}</h3>
                 <p>${p.price.toLocaleString()} COP</p>
                 <button class="open-modal-btn" data-id="${p.id}" data-img="${p.img}" data-price="${p.price}" data-title="${p.title}">Ver</button>
@@ -25,12 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderProducts(products);
 
-    // Filtros y buscador
+    // Filtro por categoría
     document.getElementById('filterCategory').addEventListener('change', e => {
         const category = e.target.value;
         renderProducts(category==='all' ? products : products.filter(p=>p.category===category));
     });
 
+    // Buscador
     document.getElementById('searchInput').addEventListener('input', e => {
         const text = e.target.value.toLowerCase();
         renderProducts(products.filter(p => p.title.toLowerCase().includes(text)));
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="modal-close">×</button>
                 <div class="product-modal-content" style="display:flex; gap:20px;">
                     <div class="product-modal-left">
-                        <img src="../img/${img}" alt="${title}" style="width:100%; max-width:350px; border-radius:10px;">
+                        <img src="img/${img}" alt="${title}" style="width:100%; max-width:350px; border-radius:10px;">
                     </div>
                     <div class="product-modal-right">
                         <h2>${title}</h2>
@@ -99,8 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Pagar
         modal.querySelector('#btnPagar').onclick = () => {
-            const imgPath = `/img/${img}`; // ruta absoluta desde root
-            const url = `payment/pagar.html?ref=${id}&producto=${encodeURIComponent(title)}&valor=${price}&img=${encodeURIComponent(imgPath)}`;
+            const url = `payment/pagar.html?ref=${id}&producto=${encodeURIComponent(title)}&valor=${price}&img=/img/${img}`;
             window.location.href = url;
         };
     }
