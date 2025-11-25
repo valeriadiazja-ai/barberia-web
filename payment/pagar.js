@@ -26,18 +26,13 @@ document.getElementById('amountLabel').value = total.toLocaleString() + ' COP';
 
 document.getElementById('payForm').addEventListener('submit', e=>{
     e.preventDefault();
-    // Mostrar ticket verde
-    const toast = document.getElementById('toast');
-    toast.innerHTML = `Pago procesado correctamente ✔️<br>
-Productos: ${cart.map(i=>i.title).join(', ')}<br>
-Monto total: ${total.toLocaleString()} COP<br>
-Contacta vía WhatsApp para coordinar entrega.`;
-    toast.classList.add('show');
+    const ticket = document.getElementById('ticket');
+    ticket.innerHTML = `
+        <h3>Pago procesado correctamente ✔️</h3>
+        <p>Productos: ${cart.map(i=>i.title).join(', ')}</p>
+        <p>Monto total: ${total.toLocaleString()} COP</p>
+        <p>Contacta vía <a href="https://wa.me/573001112233?text=Hola%20BarberX,%20ya%20realicé%20el%20pago%20de%20mis%20productos" target="_blank">WhatsApp</a> para coordinar entrega.</p>
+    `;
+    ticket.style.display = 'block';
     localStorage.removeItem('cart');
-
-    setTimeout(()=>{
-        toast.classList.remove('show');
-        // Redirigir a WhatsApp (ejemplo)
-        window.location.href = "https://wa.me/573001112233?text=Hola%20BarberX%2C%20ya%20realicé%20el%20pago%20de%20mis%20productos";
-    },4000);
 });
