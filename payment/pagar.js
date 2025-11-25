@@ -1,40 +1,19 @@
-function getParam(name) {
-  const url = new URL(window.location.href);
-  return url.searchParams.get(name);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
 
-  const ref = getParam('ref');
-  const nombre = getParam('producto');
-  const valor = parseInt(getParam('valor')) || 0;
+    const prodTitle = params.get('producto') || 'Producto';
+    const prodRef = params.get('ref') || '—';
+    const prodPrice = params.get('valor') || '0';
 
-  document.getElementById('prodTitle').textContent = nombre || "Producto";
-  document.getElementById('prodPrice').textContent = `${valor.toLocaleString()} COP`;
-  document.getElementById('prodRef').textContent = `Ref: ${ref}`;
-  document.getElementById('amountLabel').textContent = `${valor.toLocaleString()} COP`;
+    document.getElementById('prodTitle').innerText = prodTitle;
+    document.getElementById('prodRef').innerText = `Ref: ${prodRef}`;
+    document.getElementById('prodPrice').innerText = `${parseInt(prodPrice).toLocaleString()} COP`;
+    document.getElementById('amountLabel').value = `${parseInt(prodPrice).toLocaleString()} COP`;
 
-  const imgMap = {
-    'p1': '../img/shampoo.jpg',
-    'p2': '../img/aceite.jpg'
-  };
-
-  if (imgMap[ref]) {
-    document.getElementById('prodImg').src = imgMap[ref];
-  }
-
-  const form = document.getElementById('payForm');
-  const toast = document.getElementById('conf');
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    toast.textContent = "Pago procesado correctamente (simulado)";
-    toast.classList.remove('hidden');
-
-    setTimeout(() => {
-      toast.classList.add('hidden');
-      window.location.href = "/";
-    }, 2000);
-  });
+    const form = document.getElementById('payForm');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.getElementById('conf').classList.remove('hidden');
+        setTimeout(() => { document.getElementById('conf').classList.add('hidden'); }, 3000);
+    });
 });
