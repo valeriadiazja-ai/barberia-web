@@ -61,30 +61,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBody = document.getElementById('modalBody');
     const modalClose = document.getElementById('modalClose');
 
-    document.body.addEventListener('click', e => {
+    grid.addEventListener('click', e => {
         const btn = e.target.closest('.open-modal-btn');
-        if (btn) {
-            const product = products.find(p => p.id === btn.dataset.id);
-            modalBody.innerHTML = `
-                <div style="display:flex;gap:20px;">
-                    <img src="${product.img}" style="width:150px;"/>
-                    <div>
-                        <h3>${product.title}</h3>
-                        <p>${product.description}</p>
-                        <p>${product.price.toLocaleString()} COP</p>
-                        <button id="addCartBtn">Agregar al carrito</button>
-                    </div>
+        if (!btn) return;
+        const product = products.find(p => p.id === btn.dataset.id);
+        modalBody.innerHTML = `
+            <div style="display:flex; gap:20px;">
+                <img src="${product.img}" alt="${product.title}" />
+                <div>
+                    <h3>${product.title}</h3>
+                    <p>${product.description}</p>
+                    <p>${product.price.toLocaleString()} COP</p>
+                    <button id="addCartBtn">Agregar al carrito</button>
                 </div>
-            `;
-            modal.style.display = 'flex';
-
-            document.getElementById('addCartBtn').onclick = () => {
-                cart.push(product);
-                updateCartUI();
-                alert(`${product.title} agregado al carrito`);
-                modal.style.display = 'none';
-            }
-        }
+            </div>
+        `;
+        modal.style.display = 'flex';
+        document.getElementById('addCartBtn').onclick = () => {
+            cart.push(product);
+            updateCartUI();
+            alert(`${product.title} agregado al carrito`);
+            modal.style.display = 'none';
+        };
     });
 
     modalClose.onclick = () => modal.style.display = 'none';
@@ -94,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
     closeCart.onclick = () => cartModal.style.display = 'none';
 
     checkoutBtn.onclick = () => {
-        // Redirigir a pagar.html pasando todo el carrito
         window.location.href = `payment/pagar.html?cart=${encodeURIComponent(JSON.stringify(cart))}`;
     };
 
