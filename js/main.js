@@ -49,12 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const product = products.find(p => p.id === id);
         if (!product) return;
 
-        let modal = document.getElementById('productModal');
+        const modal = document.getElementById('productModal');
         modal.innerHTML = `
-            <div class="product-modal-backdrop" style="position:fixed; inset:0; background:rgba(0,0,0,0.5);"></div>
-            <div class="product-modal-panel" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border-radius:10px; max-width:400px; width:90%;">
+            <div class="modal-backdrop" style="position:fixed; inset:0; background:rgba(0,0,0,0.5);"></div>
+            <div class="modal-panel" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border-radius:10px; width:90%; max-width:400px;">
                 <button id="modalClose" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:24px; cursor:pointer;">×</button>
-                <img src="${product.img}" alt="${product.title}" style="width:100%; border-radius:8px;" />
+                <img src="${product.img}" alt="${product.title}" style="width:100%; border-radius:8px; margin-bottom:10px;" />
                 <h2>${product.title}</h2>
                 <p>${product.price.toLocaleString()} COP</p>
                 <p>${product.description}</p>
@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         modal.style.display = 'block';
+
         modal.querySelector('#modalClose').onclick = () => modal.style.display = 'none';
         modal.querySelector('#btnComprar').onclick = () => {
             cart.push(product);
@@ -74,11 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openCartModal() {
         if (cart.length === 0) { alert("Carrito vacío"); return; }
-        let modal = document.getElementById('productModal');
-        let total = cart.reduce((sum,p)=>sum+p.price,0);
+        const modal = document.getElementById('productModal');
+        let total = cart.reduce((sum, p) => sum + p.price, 0);
         modal.innerHTML = `
-            <div class="product-modal-backdrop" style="position:fixed; inset:0; background:rgba(0,0,0,0.5);"></div>
-            <div class="product-modal-panel" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border-radius:10px; max-width:400px; width:90%; max-height:70vh; overflow-y:auto;">
+            <div class="modal-backdrop" style="position:fixed; inset:0; background:rgba(0,0,0,0.5);"></div>
+            <div class="modal-panel" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border-radius:10px; width:90%; max-width:400px; max-height:70vh; overflow-y:auto;">
                 <button id="modalClose" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:24px; cursor:pointer;">×</button>
                 <h2>Carrito</h2>
                 ${cart.map(p=>`<p>${p.title} - ${p.price.toLocaleString()} COP</p>`).join('')}
