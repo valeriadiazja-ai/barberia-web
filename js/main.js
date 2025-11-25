@@ -83,7 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="modal-panel" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border-radius:10px; width:90%; max-width:400px; max-height:70vh; overflow-y:auto;">
                 <button id="modalClose" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:24px; cursor:pointer;">×</button>
                 <h2>Carrito</h2>
-                ${cart.map(p=>`<p>${p.title} - ${p.price.toLocaleString()} COP</p>`).join('')}
+                <table style="width:100%; margin-bottom:10px;">
+                    <thead><tr><th>Producto</th><th>Precio</th></tr></thead>
+                    <tbody>
+                        ${cart.map(p=>`<tr><td>${p.title}</td><td>${p.price.toLocaleString()} COP</td></tr>`).join('')}
+                    </tbody>
+                </table>
                 <p><b>Total: ${total.toLocaleString()} COP</b></p>
                 <button id="checkoutBtn">Pagar en línea</button>
             </div>
