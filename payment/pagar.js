@@ -1,9 +1,6 @@
 let cart = [];
 const cartData = localStorage.getItem('cart');
-if(cartData){
-    try { cart = JSON.parse(cartData); } 
-    catch(e){ console.error("Error al parsear carrito", e); }
-}
+if(cartData){ try{ cart = JSON.parse(cartData); } catch(e){ console.error(e); } }
 
 const container = document.getElementById('productSummary');
 let total = 0;
@@ -11,7 +8,7 @@ let total = 0;
 cart.forEach(item=>{
     total += parseInt(item.price);
     container.innerHTML += `
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
             <img src="../${item.img}" width="80" alt="${item.title}"/>
             <div>
                 <p>${item.title}</p>
