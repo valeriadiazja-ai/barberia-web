@@ -5,41 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Productos — BarberX</title>
     <link rel="stylesheet" href="css/styles.css"/>
-    <style>
-        .cart-icon {
-            position: relative;
-            display: inline-block;
-            margin-left: 20px;
-            font-size: 20px;
-            color: #fff;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .cart-icon span {
-            position: absolute;
-            top: -8px;
-            right: -10px;
-            background: red;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 12px;
-        }
-        .product-modal { position: fixed; inset:0; display:flex; justify-content:center; align-items:center; z-index:9999; }
-        .product-modal-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
-        .product-modal-panel { position:relative; background:white; padding:20px; border-radius:10px; width:90%; max-width:800px; display:flex; }
-        .product-modal-left img { width:100%; max-width:350px; border-radius:10px; }
-        .btn { padding:10px 16px; border-radius:8px; border:none; cursor:pointer; background:#000; color:white; }
-        .btn.success { background:linear-gradient(90deg,#f59e0b,#ef4444); font-weight:bold; }
-        .btn.ghost { background:white; border:1px solid #ddd; color:#222; }
-        .modal-close { position:absolute; top:10px; right:10px; background:none; border:none; font-size:24px; cursor:pointer; }
-        .cart-modal { position: fixed; inset: 0; display:flex; justify-content:center; align-items:center; z-index:9999; }
-        .cart-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
-        .cart-panel { position: relative; background:white; padding:20px; border-radius:10px; width:90%; max-width:600px; }
-        .cart-panel h2 { margin-top:0; }
-        .cart-item { display:flex; justify-content: space-between; align-items:center; margin-bottom:10px; }
-        .cart-item img { border-radius:5px; }
-    </style>
 </head>
 <body>
     <header class="site-header">
@@ -50,8 +15,10 @@
                 <a href="productos.html">Productos</a>
                 <a href="citas.html">Agendar Cita</a>
             </nav>
-            <a class="cart-icon">🛒 <span id="cartCount">0</span></a>
             <button class="nav-toggle" aria-controls="mainNav" aria-expanded="false">☰</button>
+            <div id="cartIcon" style="position:relative; cursor:pointer;">
+                🛒 <span id="cartCount" style="position:absolute; top:-10px; right:-10px; background:red; color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
+            </div>
         </div>
     </header>
 
@@ -81,6 +48,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- Modal de producto -->
+    <div id="productModal" class="modal" aria-hidden="true"></div>
 
     <script src="js/main.js"></script>
     <script>document.getElementById('year2').innerText = new Date().getFullYear();</script>
