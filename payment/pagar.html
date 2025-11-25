@@ -5,18 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pagar — BarberX</title>
 <link rel="stylesheet" href="pagar.css">
-<style>
-body{font-family:Arial,sans-serif;margin:0;padding:0;background:#f5f5f5;}
-.pay-header{background:#222;color:white;padding:20px;text-align:center;}
-.pay-container{max-width:800px;margin:20px auto;background:white;padding:20px;border-radius:10px;}
-.product-summary div{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.product-summary img{border-radius:5px;}
-.pay-form label{display:block;margin-top:10px;font-weight:bold;}
-.pay-form input{width:100%;padding:8px;margin-top:4px;border-radius:5px;border:1px solid #ccc;}
-.btn-pay{margin-top:15px;padding:10px 16px;border:none;border-radius:8px;background:linear-gradient(90deg,#f59e0b,#ef4444);color:white;cursor:pointer;font-weight:bold;}
-#ticket{display:none;background:#16a34a;color:white;padding:15px;border-radius:8px;margin-top:20px;}
-#ticket a{color:white;text-decoration:underline;}
-</style>
 </head>
 <body>
 <header class="pay-header">
@@ -24,22 +12,48 @@ body{font-family:Arial,sans-serif;margin:0;padding:0;background:#f5f5f5;}
 </header>
 
 <main class="pay-container">
-<section id="productSummary" class="product-summary"></section>
 
-<form id="payForm" class="pay-form">
-<h3>Información de Pago</h3>
-<label>Nombre completo</label><input type="text" required>
-<label>Correo electrónico</label><input type="email" required>
-<label>Banco</label><input type="text" required>
-<label>Número de tarjeta</label><input type="text" required>
-<label>CVV</label><input type="text" required>
-<label>Fecha de vencimiento</label><input type="text" placeholder="MM/AA" required>
-<label>Cédula</label><input type="text" required>
-<label>Monto total</label><input id="amountLabel" type="text" disabled>
-<button type="submit" class="btn-pay">Pagar ahora</button>
-</form>
+    <section class="product-summary">
+        <img id="prodImg" src="" alt="Producto" class="product-img" />
+        <div class="product-info">
+            <h2 id="prodTitle">Productos</h2>
+            <p id="prodRef" class="ref">Ref: —</p>
+            <p id="prodPrice" class="price">0 COP</p>
+        </div>
+    </section>
 
-<div id="ticket"></div>
+    <form id="payForm" class="pay-form">
+        <h3>Información de Pago</h3>
+
+        <label>Nombre completo</label>
+        <input type="text" required>
+
+        <label>Correo electrónico</label>
+        <input type="email" required>
+
+        <label>Número de tarjeta</label>
+        <input type="text" maxlength="16" required>
+
+        <label>CVV</label>
+        <input type="text" maxlength="3" required>
+
+        <label>Fecha de vencimiento</label>
+        <input type="month" required>
+
+        <label>Cédula</label>
+        <input type="text" required>
+
+        <label>Monto a pagar</label>
+        <input id="amountLabel" type="text" disabled>
+
+        <button type="submit" class="btn-pay">Pagar ahora</button>
+    </form>
+
+    <div id="conf" class="toast hidden" style="background:#d4edda; color:#155724; padding:15px; margin-top:15px; border-radius:8px; display:none;">
+        Pago procesado correctamente ✔️ <br>
+        Contacte por WhatsApp para la entrega: <a href="https://wa.me/573001234567" target="_blank">Enviar mensaje</a>
+    </div>
+
 </main>
 
 <script src="pagar.js"></script>
