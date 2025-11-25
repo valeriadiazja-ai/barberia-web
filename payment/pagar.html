@@ -7,53 +7,25 @@
     <link rel="stylesheet" href="pagar.css">
 </head>
 <body>
-
     <header class="pay-header">
         <h1>Pasarela de Pago</h1>
     </header>
 
     <main class="pay-container">
-
-        <section class="product-summary">
-            <img id="prodImg" src="" alt="Producto" class="product-img">
-
-            <div class="product-info">
-                <h2 id="prodTitle">Producto</h2>
-                <p id="prodRef" class="ref">Ref: —</p>
-                <p id="prodPrice" class="price">0 COP</p>
-            </div>
-        </section>
+        <section id="productSummary"></section>
 
         <form id="payForm" class="pay-form">
             <h3>Información de Pago</h3>
-
-            <label>Nombre completo</label>
-            <input type="text" required>
-
-            <label>Correo electrónico</label>
-            <input type="email" required>
-
-            <label>Banco</label>
-            <input type="text" required>
-
-            <label>Número de tarjeta</label>
-            <input type="text" required>
-
-            <label>CVV</label>
-            <input type="text" required>
-
-            <label>Fecha de vencimiento</label>
-            <input type="text" placeholder="MM/AA" required>
-
-            <label>Cédula</label>
-            <input type="text" required>
-
-            <label>Monto a pagar</label>
-            <input id="amountLabel" type="text" disabled>
-
+            <label>Nombre completo</label><input type="text" required>
+            <label>Correo electrónico</label><input type="email" required>
+            <label>Banco</label><input type="text" required>
+            <label>Número de tarjeta</label><input type="text" required>
+            <label>CVV</label><input type="text" required>
+            <label>Fecha de vencimiento</label><input type="text" placeholder="MM/AA" required>
+            <label>Cédula</label><input type="text" required>
+            <label>Monto total</label><input id="amountLabel" type="text" disabled>
             <button type="submit" class="btn-pay">Pagar ahora</button>
         </form>
-
     </main>
 
     <script src="pagar.js"></script>
