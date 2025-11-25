@@ -39,10 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProducts(products.filter(p => p.title.toLowerCase().includes(text)));
     });
 
+    document.getElementById('cartIcon').addEventListener('click', openCartModal);
+
     document.body.addEventListener('click', e => {
         const btn = e.target.closest('.open-modal-btn');
         if (btn) openProductModal(btn.dataset.id);
-        if (e.target.id === 'cartIcon') openCartModal();
     });
 
     function openProductModal(id) {
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openCartModal() {
         if (cart.length === 0) { alert("Carrito vacío"); return; }
-        const modal = document.getElementById('productModal');
+        const modal = document.getElementById('cartModal');
         let total = cart.reduce((sum, p) => sum + p.price, 0);
         modal.innerHTML = `
             <div class="modal-backdrop" style="position:fixed; inset:0; background:rgba(0,0,0,0.5);"></div>
