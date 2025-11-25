@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const prodTitle = params.get('producto') || 'Producto';
     const prodRef = params.get('ref') || '—';
     const prodPrice = params.get('valor') || '0';
-    const prodImg = params.get('img') || '';
+    const prodImg = params.get('img') || '../img/default.jpg';
 
     document.getElementById('prodTitle').innerText = prodTitle;
     document.getElementById('prodRef').innerText = `Ref: ${prodRef}`;
@@ -16,20 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', e => {
         e.preventDefault();
 
-        // Validar campos
         const required = ['name','cedula','email','banco','tarjeta','cvv','vencimiento'];
         let valid = true;
-        required.forEach(id => {
-            if(!document.getElementById(id).value.trim()) valid = false;
-        });
+        required.forEach(id => { if(!document.getElementById(id).value.trim()) valid = false; });
         if(!valid){ alert('Complete todos los campos obligatorios'); return; }
 
-        // Mostrar toast
         const toast = document.getElementById('conf');
         toast.classList.add('show');
         setTimeout(()=>toast.classList.remove('show'),4000);
 
-        // Generar ticket
         const delivery = document.querySelector('input[name="delivery"]:checked').value;
         const direccion = document.getElementById('direccion').value.trim();
         let mensaje = `Producto: ${prodTitle}\nMonto: ${parseInt(prodPrice).toLocaleString()} COP\nEntrega: `;
