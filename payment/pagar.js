@@ -13,7 +13,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('payForm');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        document.getElementById('conf').classList.remove('hidden');
-        setTimeout(() => { document.getElementById('conf').classList.add('hidden'); }, 3000);
+
+        // Validar campos obligatorios
+        const requiredFields = ['name','cedula','email','banco','tarjeta','cvv','vencimiento'];
+        let valid = true;
+        requiredFields.forEach(id => {
+            const val = document.getElementById(id).value.trim();
+            if(!val) valid = false;
+        });
+        if(!valid){
+            alert('Por favor complete todos los campos obligatorios.');
+            return;
+        }
+
+        // Mostrar toast
+        const toast = document.getElementById('conf');
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 4000);
+
+        // Generar ticket
+        const delivery = document.querySelector('input[name="delivery"]:checked').value;
+        const direccion = document.getElementById('direccion').value.trim();
+        let mensaje = `Producto: ${prodTitle}\nMonto: ${parseInt(prodPrice).toLocaleString()} COP\nEntrega: `;
+        mensaje += delivery === 'local' ? 'Recoger en local' : `Enviar a domicilio: ${direccion || 'No especificada'}`;
+
+        document.getElementById('ticketText').innerText = mensaje;
+        document.getElementById('ticket').style.display = 'block';
     });
 });
