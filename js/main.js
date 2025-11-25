@@ -26,8 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
+  function renderCart() {
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach((p, index) => {
+      total += p.price;
+      const li = document.createElement('li');
+      li.innerHTML = `${p.title} - ${p.price.toLocaleString()} COP <button data-index="${index}">Eliminar</button>`;
+      cartItems.appendChild(li);
+    });
+    cartTotal.innerText = total.toLocaleString();
+  }
+
   renderProducts(products);
   updateCartCount();
+  renderCart();
 
   document.getElementById('filterCategory').addEventListener('change', e => {
     const category = e.target.value;
@@ -39,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProducts(products.filter(p => p.title.toLowerCase().includes(text)));
   });
 
+  // Modal de previsualización
   const modal = document.getElementById('productModal');
   const modalImg = document.getElementById('modalImg');
   const modalTitle = document.getElementById('modalTitle');
@@ -63,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cart.push(product);
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCartCount();
+      renderCart();
       alert(`"${product.title}" agregado al carrito`);
       modal.style.display = 'none';
     };
@@ -71,5 +88,29 @@ document.addEventListener('DOMContentLoaded', () => {
   modalClose.onclick = () => modal.style.display = 'none';
   modal.onclick = e => { if (e.target === modal) modal.style.display = 'none'; }
 
-  updateCartCount();
+  // Carrito modal
+  const cartModal = document.getElementById('cartModal');
+  const cartIcon = document.getElementById('cartIcon');
+  const cartClose = document.getElementById('cartClose');
+  const btnPagarCarrito = document.getElementById('btnPagarCarrito');
+
+  cartIcon.onclick = () => cartModal.style.display = 'flex';
+  cartClose.onclick = () => cartModal.style.display = 'none';
+  cartModal.onclick = e => { if (e.target === cartModal) cartModal.style.display = 'none'; }
+
+  document.getElementById('cartItems').addEventListener('click', e => {
+    if (e.target.tagName === 'BUTTON') {
+      const index = e.target.dataset.index;
+      cart.splice(index,1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      renderCart();
+    }
+  });
+
+  btnPagarCarrito.onclick = () => {
+    // Pasar datos a pagar.html usando queryString
+    const carritoJSON = encodeURIComponent(JSON.stringify(cart));
+    window.location.href = `payment/pagar.html?cart=${carritoJSON}`;
+  };
 });
