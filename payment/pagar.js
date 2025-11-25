@@ -1,33 +1,48 @@
-const urlParams = new URLSearchParams(window.location.search);
-const refs = urlParams.getAll('ref[]');
-const productos = urlParams.getAll('producto[]');
-const valores = urlParams.getAll('valor[]');
-const imgs = urlParams.getAll('img[]');
 
+// Leer el carrito pasado desde la URL en JSON
+const urlParams = new URLSearchParams(window.location.search);
+const cartData = urlParams.get('cart');
+
+let cart = [];
+if(cartData){
+    try {
+        cart = JSON.parse(decodeURIComponent(cartData));
+    } catch(e){
+        console.error("Error al parsear carrito", e);
+    }
+}
+
+// Mostrar productos y calcular total
 const container = document.getElementById('productSummary');
 let total = 0;
-productos.forEach((p,i)=>{
-    total += parseInt(valores[i]);
+
+cart.forEach(item=>{
+    total += parseInt(item.price);
     container.innerHTML += `
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-            <img src="${imgs[i]}" width="80"/>
+        <div>
+            <img src="${item.img}" width="80" alt="${item.title}"/>
             <div>
-                <p>${p}</p>
-                <p>Ref: ${refs[i]}</p>
-                <p>${parseInt(valores[i]).toLocaleString()} COP</p>
+                <p>${item.title}</p>
+                <p>Ref: ${item.id}</p>
+                <p>${parseInt(item.price).toLocaleString()} COP</p>
             </div>
         </div>
     `;
 });
 
+// Mostrar monto total en input
 document.getElementById('amountLabel').value = total.toLocaleString() + ' COP';
 
-document.getElementById('payForm').addEventListener('submit', e => {
+// Simular pago
+document.getElementById('payForm').addEventListener('submit', e=>{
     e.preventDefault();
+
     alert(`Pago procesado correctamente ✔️
-Productos: ${productos.join(', ')}
+Productos: ${cart.map(i=>i.title).join(', ')}
 Monto total: ${total.toLocaleString()} COP
 Por favor contacte por WhatsApp para coordinar entrega o domicilio.`);
+
+    // Limpiar carrito y volver a productos
     localStorage.removeItem('cart');
     window.location.href = '../productos.html';
 });
