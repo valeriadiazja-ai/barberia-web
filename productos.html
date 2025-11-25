@@ -6,6 +6,17 @@
 <title>Productos — BarberX</title>
 <link rel="stylesheet" href="css/styles.css"/>
 <style>
+/* Modal de previsualización */
+#productModal {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+  justify-content:center; align-items:center; z-index:9999;
+}
+#productModal .modal-content {
+  background:white; padding:20px; border-radius:10px; width:90%; max-width:500px;
+}
+#productModal img { width:150px; }
+#productModal button { margin-top:10px; }
+
 /* Carrito flotante */
 #cartIcon {
   position: fixed; top:20px; right:20px; cursor:pointer; font-size:20px;
@@ -25,17 +36,6 @@
 #cartContent ul { list-style:none; padding:0; max-height:300px; overflow-y:auto; }
 #cartContent li { display:flex; justify-content:space-between; margin-bottom:10px; }
 #cartContent button { margin-top:10px; }
-
-/* Modal previsualización */
-#productModal {
-  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
-  justify-content:center; align-items:center; z-index:9999;
-}
-#productModal .modal-content {
-  background:white; padding:20px; border-radius:10px; width:90%; max-width:500px;
-}
-#productModal img { width:150px; }
-#productModal button { margin-top:10px; }
 </style>
 </head>
 <body>
