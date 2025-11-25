@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProducts(products.filter(p => p.title.toLowerCase().includes(text)));
   });
 
-  // MODAL DE PRODUCTO
   const modal = document.getElementById('productModal');
   const modalImg = document.getElementById('modalImg');
   const modalTitle = document.getElementById('modalTitle');
