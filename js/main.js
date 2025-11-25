@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modal.querySelector('#checkoutBtn').onclick = () => {
             if(cart.length===0){ alert("Carrito vacío"); return; }
-            let query = cart.map(p=>`ref[]=${p.id}&producto[]=${encodeURIComponent(p.title)}&valor[]=${p.price}&img[]=/img/${p.img}`).join('&');
+            let query = cart.map(p=>`ref[]=${p.id}&producto[]=${encodeURIComponent(p.title)}&valor[]=${p.price}&img[]=img/${p.img}`).join('&');
             window.location.href = `payment/pagar.html?${query}`;
         };
     }
