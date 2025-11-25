@@ -1,115 +1,158 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-  const products = [
-    {
-      id: 'p1',
-      title: 'Shampoo anticaspa',
-      price: 22000,
-      description: 'Limpieza profunda y control de caspa.',
-      img: 'img/shampoo.jpg'
-    },
-    {
-      id: 'p2',
-      title: 'Aceite para barba',
-      price: 18000,
-      description: 'Hidratación y brillo natural.',
-      img: 'img/aceite.jpg'
-    }
-  ];
-
-  const grid = document.querySelector('.products-grid');
-  if (grid) {
-    grid.innerHTML = products.map(p => `
-      <div class="card product-card" data-id="${p.id}">
-        <img src="${p.img}" alt="${p.title}" />
-        <h3>${p.title}</h3>
-        <p>${p.price.toLocaleString()} COP</p>
-        <button class="open-modal-btn" data-id="${p.id}">Ver</button>
-      </div>
-    `).join('');
+// ------------------------------
+// Productos BarberX
+// ------------------------------
+const products = [
+  {
+    id: 1,
+    title: "Shampoo Nutritivo",
+    price: 32000,
+    category: "cabello",
+    img: "../img/shampoo.jpg",
+    ref: "BX-SH-01",
+    desc: "Shampoo profesional que fortalece y nutre el cabello."
+  },
+  {
+    id: 2,
+    title: "Aceite para Barba",
+    price: 28000,
+    category: "barba",
+    img: "../img/aceite.jpg",
+    ref: "BX-AC-02",
+    desc: "Aceite hidratante para barba con acabado suave y aroma premium."
+  },
+  {
+    id: 3,
+    title: "Aftershave Refrescante",
+    price: 25000,
+    category: "piel",
+    img: "../img/aftershave.jpg",
+    ref: "BX-AF-03",
+    desc: "Loción refrescante que calma la piel después del afeitado."
+  },
+  {
+    id: 4,
+    title: "Cera para Cabello",
+    price: 22000,
+    category: "cabello",
+    img: "../img/cera.jpg",
+    ref: "BX-CE-04",
+    desc: "Cera moldeadora con alta fijación y acabado natural."
+  },
+  {
+    id: 5,
+    title: "Mascarilla Facial",
+    price: 30000,
+    category: "piel",
+    img: "../img/mascarilla.jpg",
+    ref: "BX-MA-05",
+    desc: "Mascarilla de limpieza profunda con carbón activado."
+  },
+  {
+    id: 6,
+    title: "Peine Premium",
+    price: 15000,
+    category: "barba",
+    img: "../img/peine.jpg",
+    ref: "BX-PE-06",
+    desc: "Peine profesional antiestático ideal para todo tipo de barba."
   }
+];
 
-  document.body.addEventListener('click', (e) => {
-    const btn = e.target.closest('.open-modal-btn');
-    if (btn) {
-      const id = btn.getAttribute('data-id');
-      openProductModal(id);
-    }
+
+// ------------------------------
+// Renderizado de productos
+// ------------------------------
+const list = document.getElementById("product-list");
+const filter = document.getElementById("filterCategory");
+const searchInput = document.getElementById("searchInput");
+
+function renderProducts(items) {
+  list.innerHTML = "";
+  items.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.title}">
+      <h3>${p.title}</h3>
+      <p class="price">${p.price.toLocaleString()} COP</p>
+      <button class="btn view-btn" data-id="${p.id}">Ver más</button>
+    `;
+
+    list.appendChild(card);
+  });
+}
+
+renderProducts(products);
+
+
+// ------------------------------
+// Filtros
+// ------------------------------
+filter.addEventListener("change", () => {
+  applyFilters();
+});
+
+searchInput.addEventListener("input", () => {
+  applyFilters();
+});
+
+function applyFilters() {
+  const category = filter.value;
+  const text = searchInput.value.toLowerCase();
+
+  const filtered = products.filter(p => {
+    const matchesCategory = category === "all" || p.category === category;
+    const matchesText =
+      p.title.toLowerCase().includes(text) ||
+      p.desc.toLowerCase().includes(text);
+
+    return matchesCategory && matchesText;
   });
 
-  window.openProductModal = function openProductModal(id) {
-    const product = products.find(p => p.id === id);
-    if (!product) return console.warn('Producto no encontrado', id);
+  renderProducts(filtered);
+}
 
-    let modal = document.querySelector('.product-modal');
-    if (modal) modal.remove();
 
-    modal = document.createElement('div');
-    modal.className = 'product-modal';
-    modal.innerHTML = `
-      <div class="product-modal-backdrop"></div>
-      <div class="product-modal-panel" role="dialog" aria-modal="true">
-        <button class="modal-close" aria-label="Cerrar">×</button>
+// ------------------------------
+// Modal producto
+// ------------------------------
+const modal = document.getElementById("productModal");
+const modalBody = document.getElementById("modalBody2");
+const modalClose = document.getElementById("modalClose2");
 
-        <div class="product-modal-content">
-          <div class="product-modal-left">
-            <img src="${product.img}" alt="${product.title}" />
-          </div>
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("view-btn")) {
+    const id = e.target.dataset.id;
+    openProduct(id);
+  }
+});
 
-          <div class="product-modal-right">
-            <h2>${product.title}</h2>
-            <p class="price">${product.price.toLocaleString()} COP</p>
-            <p class="desc">${product.description}</p>
+function openProduct(id) {
+  const p = products.find(x => x.id == id);
 
-            <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn" id="btnComprar">Comprar</button>
-              <button class="btn success" id="btnPagar">Pagar en línea</button>
-              <button class="btn ghost" id="btnCerrar">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
+  modalBody.innerHTML = `
+    <img src="${p.img}" class="modal-img">
+    <h2 id="modalTitle">${p.title}</h2>
+    <p>${p.desc}</p>
+    <p class="price">${p.price.toLocaleString()} COP</p>
 
-    document.body.appendChild(modal);
-    injectModalStyles();
+    <button class="btn primary"
+      onclick="location.href='../pagar/pagar.html?ref=${p.ref}&title=${encodeURIComponent(p.title)}&price=${p.price}&img=${encodeURIComponent(p.img)}'">
+      Pagar en línea
+    </button>
+  `;
 
-    modal.querySelector('.product-modal-backdrop').onclick =
-    modal.querySelector('#btnCerrar').onclick =
-    modal.querySelector('.modal-close').onclick =
-      () => modal.remove();
+  modal.setAttribute("aria-hidden", "false");
+  modal.style.display = "block";
+}
 
-    modal.querySelector('#btnComprar').onclick = () => {
-      alert(`Has añadido "${product.title}" al carrito (simulado).`);
-      modal.remove();
-    };
+modalClose.addEventListener("click", () => {
+  modal.style.display = "none";
+});
 
-    modal.querySelector('#btnPagar').onclick = () => {
-      const referencia = encodeURIComponent(product.id);
-      const nombre = encodeURIComponent(product.title);
-      const valor = product.price;
-
-      window.location.href =
-        `/payment/pagar.html?ref=${referencia}&producto=${nombre}&valor=${valor}`;
-    };
-  };
-
-  function injectModalStyles() {
-    if (document.getElementById('product-modal-styles')) return;
-    const style = document.createElement('style');
-    style.id = 'product-modal-styles';
-    style.innerHTML = `
-      .product-modal { position:fixed; inset:0; display:flex; justify-content:center; align-items:center; z-index:9999; }
-      .product-modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45); }
-      .product-modal-panel{ position:relative; background:#fff; width:90%; max-width:1100px; border-radius:12px; padding:24px; display:flex; }
-      .product-modal-content{ display:flex; gap:20px; width:100%; }
-      .product-modal-left img{ max-width:420px; width:100%; border-radius:10px; }
-      .product-modal-right{ flex:1; }
-      .modal-close{ position:absolute; right:14px; top:10px; font-size:24px; background:transparent; border:0; cursor:pointer; }
-      .btn{ padding:10px 16px; border-radius:10px; border:0; cursor:pointer; }
-      .btn.success{ background:linear-gradient(90deg,#f59e0b,#ef4444); color:white; font-weight:700; }
-      .btn.ghost{ background:#fff; border:1px solid #e6e6e6; }
-    `;
-    document.head.appendChild(style);
+modal.addEventListener("click", e => {
+  if (e.target === modal) {
+    modal.style.display = "none";
   }
 });
