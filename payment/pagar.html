@@ -1,55 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagar — BarberX</title>
-    <link rel="stylesheet" href="pagar.css">
-    <style>
-        body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f5f5f5; }
-        .pay-header { background:#222; color:white; padding:20px; text-align:center; }
-        .pay-container { max-width:800px; margin:20px auto; background:white; padding:20px; border-radius:10px; }
-        .product-summary div { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-        .product-summary img { border-radius:5px; }
-        .pay-form label { display:block; margin-top:10px; font-weight:bold; }
-        .pay-form input { width:100%; padding:8px; margin-top:4px; border-radius:5px; border:1px solid #ccc; }
-        .btn-pay { margin-top:15px; padding:10px 16px; border:none; border-radius:8px; background:linear-gradient(90deg,#f59e0b,#ef4444); color:white; cursor:pointer; font-weight:bold; }
-        #ticket { display:none; background:#16a34a; color:white; padding:15px; border-radius:8px; margin-top:20px; }
-        #ticket a { color:white; text-decoration:underline; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagar — BarberX</title>
+<link rel="stylesheet" href="pagar.css">
+<style>
+body{font-family:Arial,sans-serif;margin:0;padding:0;background:#f5f5f5;}
+.pay-header{background:#222;color:white;padding:20px;text-align:center;}
+.pay-container{max-width:800px;margin:20px auto;background:white;padding:20px;border-radius:10px;}
+.product-summary div{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.product-summary img{border-radius:5px;}
+.pay-form label{display:block;margin-top:10px;font-weight:bold;}
+.pay-form input{width:100%;padding:8px;margin-top:4px;border-radius:5px;border:1px solid #ccc;}
+.btn-pay{margin-top:15px;padding:10px 16px;border:none;border-radius:8px;background:linear-gradient(90deg,#f59e0b,#ef4444);color:white;cursor:pointer;font-weight:bold;}
+#ticket{display:none;background:#16a34a;color:white;padding:15px;border-radius:8px;margin-top:20px;}
+#ticket a{color:white;text-decoration:underline;}
+</style>
 </head>
 <body>
-    <header class="pay-header">
-        <h1>Pasarela de Pago</h1>
-    </header>
+<header class="pay-header">
+<h1>Pasarela de Pago</h1>
+</header>
 
-    <main class="pay-container">
-        <section id="productSummary" class="product-summary"></section>
+<main class="pay-container">
+<section id="productSummary" class="product-summary"></section>
 
-        <form id="payForm" class="pay-form">
-            <h3>Información de Pago</h3>
-            <label>Nombre completo</label>
-            <input type="text" required>
-            <label>Correo electrónico</label>
-            <input type="email" required>
-            <label>Banco</label>
-            <input type="text" required>
-            <label>Número de tarjeta</label>
-            <input type="text" required>
-            <label>CVV</label>
-            <input type="text" required>
-            <label>Fecha de vencimiento</label>
-            <input type="text" placeholder="MM/AA" required>
-            <label>Cédula</label>
-            <input type="text" required>
-            <label>Monto total</label>
-            <input id="amountLabel" type="text" disabled>
-            <button type="submit" class="btn-pay">Pagar ahora</button>
-        </form>
+<form id="payForm" class="pay-form">
+<h3>Información de Pago</h3>
+<label>Nombre completo</label><input type="text" required>
+<label>Correo electrónico</label><input type="email" required>
+<label>Banco</label><input type="text" required>
+<label>Número de tarjeta</label><input type="text" required>
+<label>CVV</label><input type="text" required>
+<label>Fecha de vencimiento</label><input type="text" placeholder="MM/AA" required>
+<label>Cédula</label><input type="text" required>
+<label>Monto total</label><input id="amountLabel" type="text" disabled>
+<button type="submit" class="btn-pay">Pagar ahora</button>
+</form>
 
-        <div id="ticket"></div>
-    </main>
+<div id="ticket"></div>
+</main>
 
-    <script src="pagar.js"></script>
+<script src="pagar.js"></script>
 </body>
 </html>
