@@ -1,28 +1,53 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const imgEl = document.getElementById('prodImg');
-    const titleEl = document.getElementById('prodTitle');
-    const refEl = document.getElementById('prodRef');
-    const priceEl = document.getElementById('prodPrice');
-    const amountInput = document.getElementById('amountLabel');
-    const conf = document.getElementById('conf');
+  const params = new URLSearchParams(window.location.search);
+  const cartJSON = params.get('cart');
+  const cart = cartJSON ? JSON.parse(cartJSON) : [];
 
-    let total = cart.reduce((sum, p) => sum + p.price, 0);
-    amountInput.value = total.toLocaleString() + ' COP';
+  const prodImg = document.getElementById('prodImg');
+  const prodTitle = document.getElementById('prodTitle');
+  const prodRef = document.getElementById('prodRef');
+  const prodPrice = document.getElementById('prodPrice');
+  const amountLabel = document.getElementById('amountLabel');
+  const payForm = document.getElementById('payForm');
+  const ticket = document.getElementById('ticket');
+  const ticketProductos = document.getElementById('ticketProductos');
+  const ticketTotal = document.getElementById('ticketTotal');
+  const whatsappLink = document.getElementById('whatsappLink');
 
-    titleEl.textContent = cart.length > 1 ? `${cart.length} productos` : cart[0]?.title || '—';
-    refEl.textContent = 'Ref: ' + (cart.length === 1 ? cart[0].id : '-');
-    priceEl.textContent = total.toLocaleString() + ' COP';
-    imgEl.src = cart.length === 1 ? cart[0].img : 'img/multiple-products.jpg'; // imagen general si varios
+  // Mostrar la primera imagen como referencia
+  if (cart.length > 0) {
+    prodImg.src = cart[0].img;
+    prodTitle.innerText = `${cart.length} productos en carrito`;
+    prodRef.innerText = `Ref: múltiples`;
+  } else {
+    prodImg.src = '';
+    prodTitle.innerText = 'No hay productos';
+    prodRef.innerText = 'Ref: —';
+  }
 
-    document.getElementById('payForm').addEventListener('submit', e => {
-        e.preventDefault();
-        conf.style.display = 'block';
-        conf.scrollIntoView({behavior:'smooth'});
-        localStorage.removeItem('cart'); // Vaciar carrito al pagar
-        amountInput.value = '0 COP';
-        titleEl.textContent = '—';
-        refEl.textContent = 'Ref: —';
-        priceEl.textContent = '0 COP';
-    });
+  // Calcular total
+  let total = 0;
+  cart.forEach(p => total += p.price);
+  prodPrice.innerText = `${total.toLocaleString()} COP`;
+  amountLabel.value = `${total.toLocaleString()} COP`;
+
+  payForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if (cart.length === 0) {
+      alert('No hay productos en el carrito.');
+      return;
+    }
+
+    // Mostrar ticket
+    ticket.style.display = 'block';
+    ticketProductos.innerText = cart.map(p => p.title).join(', ');
+    ticketTotal.innerText = total.toLocaleString();
+
+    // WhatsApp (link de ejemplo)
+    const waMessage = encodeURIComponent(`Hola, he pagado ${total.toLocaleString()} COP por los productos: ${cart.map(p => p.title).join(', ')}`);
+    whatsappLink.href = `https://wa.me/573001234567?text=${waMessage}`;
+
+    // Limpiar carrito después de pagar
+    localStorage.removeItem('cart');
+  });
 });
