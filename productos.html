@@ -1,59 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Productos — BarberX</title>
-    <link rel="stylesheet" href="css/styles.css"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Productos — BarberX</title>
+<link rel="stylesheet" href="css/styles.css"/>
+<style>
+/* Estilos mínimos para modal */
+.modal-overlay {
+  position: fixed; inset:0; background: rgba(0,0,0,0.5);
+  display: none; justify-content:center; align-items:center; z-index:999;
+}
+.modal-content {
+  background:white; border-radius:10px; padding:20px; max-width:400px;
+  width:90%; position:relative;
+}
+.modal-content img { width:100%; border-radius:8px; margin-bottom:10px; }
+.modal-close { position:absolute; top:10px; right:10px; font-size:24px; border:none; background:none; cursor:pointer; }
+</style>
 </head>
 <body>
-    <header class="site-header">
-        <div class="container header-inner">
-            <a class="logo" href="index.html">BarberX</a>
-            <nav class="main-nav" id="mainNav">
-                <a href="index.html">Inicio</a>
-                <a href="productos.html">Productos</a>
-                <a href="citas.html">Agendar Cita</a>
-            </nav>
-            <button class="nav-toggle" aria-controls="mainNav" aria-expanded="false">☰</button>
-            <div id="cartIcon" style="position:relative; cursor:pointer;">
-                🛒 <span id="cartCount" style="position:absolute; top:-10px; right:-10px; background:red; color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
-            </div>
-        </div>
-    </header>
 
-    <main class="container section">
-        <div class="products-header">
-            <h1>Productos</h1>
-            <div class="filters">
-                <select id="filterCategory">
-                    <option value="all">Todos</option>
-                    <option value="cabello">Cabello</option>
-                    <option value="barba">Barba</option>
-                    <option value="piel">Cuidado</option>
-                </select>
-                <input id="searchInput" placeholder="Buscar producto..." />
-            </div>
-        </div>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="index.html">BarberX</a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="citas.html">Agendar Cita</a>
+    </nav>
+    <button class="nav-toggle" aria-controls="mainNav" aria-expanded="false">☰</button>
+    <div id="cartIcon" style="position:relative; cursor:pointer;">
+      🛒 <span id="cartCount" style="position:absolute; top:-10px; right:-10px; background:red; color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
+    </div>
+  </div>
+</header>
 
-        <div id="product-list" class="products-grid"></div>
-    </main>
+<main class="container section">
+  <div class="products-header">
+    <h1>Productos</h1>
+    <div class="filters">
+      <select id="filterCategory">
+        <option value="all">Todos</option>
+        <option value="cabello">Cabello</option>
+        <option value="barba">Barba</option>
+        <option value="piel">Cuidado</option>
+      </select>
+      <input id="searchInput" placeholder="Buscar producto..." />
+    </div>
+  </div>
+  <div id="product-list" class="products-grid"></div>
+</main>
 
-    <footer class="site-footer">
-        <div class="container footer-inner">
-            <div>© <span id="year2"></span> BarberX</div>
-            <div class="socials">
-                <a href="#" aria-label="Instagram">IG</a>
-                <a href="#" aria-label="WhatsApp">WA</a>
-            </div>
-        </div>
-    </footer>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>© <span id="year2"></span> BarberX</div>
+    <div class="socials">
+      <a href="#" aria-label="Instagram">IG</a>
+      <a href="#" aria-label="WhatsApp">WA</a>
+    </div>
+  </div>
+</footer>
 
-    <!-- MODALES -->
-    <div id="productModal" class="modal" style="display:none;"></div>
-    <div id="cartModal" class="modal" style="display:none;"></div>
+<!-- MODAL ESTABLE PARA VER PRODUCTO -->
+<div id="productModal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="modal-close">×</button>
+    <img id="modalImg" src="" alt="Producto">
+    <h2 id="modalTitle"></h2>
+    <p id="modalPrice"></p>
+    <p id="modalDesc"></p>
+    <button id="btnAgregarCarrito">Agregar al carrito</button>
+  </div>
+</div>
 
-    <script src="js/main.js"></script>
-    <script>document.getElementById('year2').innerText = new Date().getFullYear();</script>
+<script src="js/main.js"></script>
+<script>document.getElementById('year2').innerText = new Date().getFullYear();</script>
 </body>
 </html>
