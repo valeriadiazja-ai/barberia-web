@@ -1,8 +1,8 @@
 const urlParams = new URLSearchParams(window.location.search);
-const refs = urlParams.getAll('ref');
-const productos = urlParams.getAll('producto');
-const valores = urlParams.getAll('valor');
-const imgs = urlParams.getAll('img');
+const refs = urlParams.getAll('ref[]');
+const productos = urlParams.getAll('producto[]');
+const valores = urlParams.getAll('valor[]');
+const imgs = urlParams.getAll('img[]');
 
 const container = document.getElementById('productSummary');
 let total = 0;
