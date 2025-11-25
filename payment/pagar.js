@@ -1,36 +1,21 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
+const urlParams = new URLSearchParams(window.location.search);
+const prodTitle = urlParams.get('producto');
+const prodPrice = urlParams.get('valor');
+const prodRef = urlParams.get('ref');
+const prodImg = urlParams.get('img');
 
-    const prodTitle = params.get('producto') || 'Producto';
-    const prodRef = params.get('ref') || '—';
-    const prodPrice = params.get('valor') || '0';
-    const prodImg = params.get('img') || '../img/default.jpg';
+document.getElementById('prodTitle').innerText = prodTitle;
+document.getElementById('prodPrice').innerText = parseInt(prodPrice).toLocaleString() + ' COP';
+document.getElementById('prodRef').innerText = 'Ref: ' + prodRef;
+document.getElementById('prodImg').src = prodImg;
 
-    document.getElementById('prodTitle').innerText = prodTitle;
-    document.getElementById('prodRef').innerText = `Ref: ${prodRef}`;
-    document.getElementById('prodPrice').innerText = `${parseInt(prodPrice).toLocaleString()} COP`;
-    document.getElementById('amountLabel').value = `${parseInt(prodPrice).toLocaleString()} COP`;
-    document.getElementById('prodImg').src = prodImg;
+document.getElementById('amountLabel').value = parseInt(prodPrice).toLocaleString() + ' COP';
 
-    const form = document.getElementById('payForm');
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-
-        const required = ['name','cedula','email','banco','tarjeta','cvv','vencimiento'];
-        let valid = true;
-        required.forEach(id => { if(!document.getElementById(id).value.trim()) valid = false; });
-        if(!valid){ alert('Complete todos los campos obligatorios'); return; }
-
-        const toast = document.getElementById('conf');
-        toast.classList.add('show');
-        setTimeout(()=>toast.classList.remove('show'),4000);
-
-        const delivery = document.querySelector('input[name="delivery"]:checked').value;
-        const direccion = document.getElementById('direccion').value.trim();
-        let mensaje = `Producto: ${prodTitle}\nMonto: ${parseInt(prodPrice).toLocaleString()} COP\nEntrega: `;
-        mensaje += delivery==='local' ? 'Recoger en local' : `Domicilio: ${direccion || 'No especificada'}`;
-
-        document.getElementById('ticketText').innerText = mensaje;
-        document.getElementById('ticket').style.display='block';
-    });
+document.getElementById('payForm').addEventListener('submit', e => {
+    e.preventDefault();
+    alert(`Pago procesado correctamente ✔️
+Producto: ${prodTitle}
+Monto: ${parseInt(prodPrice).toLocaleString()} COP
+Por favor contacte por WhatsApp para coordinar entrega o domicilio.`);
+    window.location.href = '../productos.html';
 });
