@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Confirmación de pago - BarberX</title>
+  <style>
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto;display:flex;align-items:center;justify-content:center;padding:24px;min-height:100vh;background:linear-gradient(180deg,#071023,#0b1220);color:#fff}
+    .panel{background:#0f1724;padding:28px;border-radius:12px;max-width:720px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
+    h1{margin:0 0 6px 0}
+    .details{display:flex;gap:18px;align-items:center;margin-top:16px}
+    .badge{background:linear-gradient(90deg,#f59e0b,#ef4444);padding:10px 14px;border-radius:8px;font-weight:700}
+    .meta{color:#cbd5e1}
+    .actions{margin-top:18px;display:flex;gap:10px}
+    .btn{padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
+    .btn.print{background:#fff;color:#111}
+    .btn.home{background:transparent;border:1px solid #364152;color:#fff}
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>Pago confirmado</h1>
+    <p class="meta">Gracias por tu compra. Aquí está el resumen del pago (simulado).</p>
+
+    <div class="details">
+      <div class="badge" id="amount">0 COP</div>
+      <div>
+        <div id="productTitle" style="font-weight:700">Producto</div>
+        <div id="productRef" style="color:#94a3b8;margin-top:6px">Ref: -</div>
+        <div id="emailInfo" style="color:#94a3b8;margin-top:6px">Recibo enviado a: -</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn print" onclick="window.print()">Imprimir recibo</button>
+      <a class="btn home" href="/"><button class="btn home" style="background:transparent;border:0;color:#fff;cursor:pointer">Volver al inicio</button></a>
+    </div>
+  </div>
+
+  <script>
+    const qs = new URLSearchParams(location.search);
+    const ref = qs.get('ref') || '-';
+    const producto = qs.get('producto') || 'Producto';
+    const valor = qs.get('valor') || '0';
+    const email = qs.get('email') || '-';
+
+    document.getElementById('amount').textContent = Number(valor).toLocaleString() + ' COP';
+    document.getElementById('productTitle').textContent = decodeURIComponent(producto);
+    document.getElementById('productRef').textContent = 'Ref: ' + ref;
+    document.getElementById('emailInfo').textContent = 'Recibo (simulado) a: ' + decodeURIComponent(email);
+  </script>
+</body>
+</html>
