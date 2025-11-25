@@ -1,158 +1,121 @@
-// ------------------------------
-// Productos BarberX
-// ------------------------------
-const products = [
-  {
-    id: 1,
-    title: "Shampoo Nutritivo",
-    price: 32000,
-    category: "cabello",
-    img: "../img/shampoo.jpg",
-    ref: "BX-SH-01",
-    desc: "Shampoo profesional que fortalece y nutre el cabello."
-  },
-  {
-    id: 2,
-    title: "Aceite para Barba",
-    price: 28000,
-    category: "barba",
-    img: "../img/aceite.jpg",
-    ref: "BX-AC-02",
-    desc: "Aceite hidratante para barba con acabado suave y aroma premium."
-  },
-  {
-    id: 3,
-    title: "Aftershave Refrescante",
-    price: 25000,
-    category: "piel",
-    img: "../img/aftershave.jpg",
-    ref: "BX-AF-03",
-    desc: "Loción refrescante que calma la piel después del afeitado."
-  },
-  {
-    id: 4,
-    title: "Cera para Cabello",
-    price: 22000,
-    category: "cabello",
-    img: "../img/cera.jpg",
-    ref: "BX-CE-04",
-    desc: "Cera moldeadora con alta fijación y acabado natural."
-  },
-  {
-    id: 5,
-    title: "Mascarilla Facial",
-    price: 30000,
-    category: "piel",
-    img: "../img/mascarilla.jpg",
-    ref: "BX-MA-05",
-    desc: "Mascarilla de limpieza profunda con carbón activado."
-  },
-  {
-    id: 6,
-    title: "Peine Premium",
-    price: 15000,
-    category: "barba",
-    img: "../img/peine.jpg",
-    ref: "BX-PE-06",
-    desc: "Peine profesional antiestático ideal para todo tipo de barba."
-  }
-];
+document.addEventListener('DOMContentLoaded', () => {
 
+    // ⭐ Aquí van TODOS tus productos reales ⭐
+    const products = [
+        { id: 'p1', title: 'Shampoo anticaspa', price: 22000, description: 'Limpieza profunda y control de caspa.', img: 'img/shampoo.jpg', category: 'cabello' },
+        { id: 'p2', title: 'Aceite para barba', price: 18000, description: 'Hidratación y brillo natural.', img: 'img/aceite.jpg', category: 'barba' },
+        { id: 'p3', title: 'After Shave', price: 20000, description: 'Calma y cuida la piel después del afeitado.', img: 'img/aftershave.jpg', category: 'piel' },
+        { id: 'p4', title: 'Cera para cabello', price: 25000, description: 'Fijación fuerte para estilos duraderos.', img: 'img/cera.jpg', category: 'cabello' },
+        { id: 'p5', title: 'Mascarilla facial', price: 15000, description: 'Limpieza profunda para el rostro.', img: 'img/mascarilla.jpg', category: 'piel' },
+        { id: 'p6', title: 'Peine profesional', price: 10000, description: 'Peine resistente y de calidad profesional.', img: 'img/peine.jpg', category: 'cabello' }
+    ];
 
-// ------------------------------
-// Renderizado de productos
-// ------------------------------
-const list = document.getElementById("product-list");
-const filter = document.getElementById("filterCategory");
-const searchInput = document.getElementById("searchInput");
+    // 📌 Renderizar productos
+    const grid = document.getElementById('product-list');
 
-function renderProducts(items) {
-  list.innerHTML = "";
-  items.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "product-card";
+    function renderProducts(list) {
+        grid.innerHTML = list.map(p => `
+            <div class="card product-card">
+                <img src="${p.img}" alt="${p.title}" />
+                <h3>${p.title}</h3>
+                <p>${p.price.toLocaleString()} COP</p>
+                <button class="open-modal-btn" data-id="${p.id}">Ver</button>
+            </div>
+        `).join('');
+    }
 
-    card.innerHTML = `
-      <img src="${p.img}" alt="${p.title}">
-      <h3>${p.title}</h3>
-      <p class="price">${p.price.toLocaleString()} COP</p>
-      <button class="btn view-btn" data-id="${p.id}">Ver más</button>
-    `;
+    renderProducts(products);
 
-    list.appendChild(card);
-  });
-}
+    // 📌 FILTRO por categoría
+    document.getElementById('filterCategory').addEventListener('change', (e) => {
+        const category = e.target.value;
+        if (category === 'all') return renderProducts(products);
+        renderProducts(products.filter(p => p.category === category));
+    });
 
-renderProducts(products);
+    // 📌 BUSCADOR
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        const text = e.target.value.toLowerCase();
+        const filtered = products.filter(p => p.title.toLowerCase().includes(text));
+        renderProducts(filtered);
+    });
 
+    // 📌 CLICK para abrir modal
+    document.body.addEventListener('click', (e) => {
+        const btn = e.target.closest('.open-modal-btn');
+        if (btn) openProductModal(btn.dataset.id);
+    });
 
-// ------------------------------
-// Filtros
-// ------------------------------
-filter.addEventListener("change", () => {
-  applyFilters();
-});
+    // ⭐ Modal de producto ⭐
+    function openProductModal(id) {
+        const product = products.find(p => p.id === id);
+        if (!product) return;
 
-searchInput.addEventListener("input", () => {
-  applyFilters();
-});
+        let modal = document.querySelector('.product-modal');
+        if (modal) modal.remove();
 
-function applyFilters() {
-  const category = filter.value;
-  const text = searchInput.value.toLowerCase();
+        modal = document.createElement('div');
+        modal.className = 'product-modal';
 
-  const filtered = products.filter(p => {
-    const matchesCategory = category === "all" || p.category === category;
-    const matchesText =
-      p.title.toLowerCase().includes(text) ||
-      p.desc.toLowerCase().includes(text);
+        modal.innerHTML = `
+            <div class="product-modal-backdrop"></div>
+            <div class="product-modal-panel" role="dialog" aria-modal="true">
+                <button class="modal-close" aria-label="Cerrar">×</button>
+                <div class="product-modal-content">
+                    <div class="product-modal-left">
+                        <img src="${product.img}" alt="${product.title}" />
+                    </div>
+                    <div class="product-modal-right">
+                        <h2>${product.title}</h2>
+                        <p class="price">${product.price.toLocaleString()} COP</p>
+                        <p class="desc">${product.description}</p>
 
-    return matchesCategory && matchesText;
-  });
+                        <div style="margin-top:18px; display:flex; gap:8px; flex-wrap:wrap">
+                            <button class="btn" id="btnComprar">Comprar</button>
+                            <button class="btn success" id="btnPagar">Pagar en línea</button>
+                            <button class="btn ghost" id="btnCerrar">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
 
-  renderProducts(filtered);
-}
+        document.body.appendChild(modal);
+        injectModalStyles();
 
+        modal.querySelector('.product-modal-backdrop').onclick = () => modal.remove();
+        modal.querySelector('.modal-close').onclick = () => modal.remove();
+        modal.querySelector('#btnCerrar').onclick = () => modal.remove();
 
-// ------------------------------
-// Modal producto
-// ------------------------------
-const modal = document.getElementById("productModal");
-const modalBody = document.getElementById("modalBody2");
-const modalClose = document.getElementById("modalClose2");
+        // ❗ Botón COMPRAR (opcional)
+        modal.querySelector('#btnComprar').onclick = () => {
+            alert(`Has añadido "${product.title}" al carrito.`);
+            modal.remove();
+        };
 
-document.addEventListener("click", e => {
-  if (e.target.classList.contains("view-btn")) {
-    const id = e.target.dataset.id;
-    openProduct(id);
-  }
-});
+        // ❗ Botón PAGAR EN LÍNEA
+        modal.querySelector('#btnPagar').onclick = () => {
+            window.location.href = `payment/pagar.html?ref=${product.id}&producto=${encodeURIComponent(product.title)}&valor=${product.price}`;
+        };
+    }
 
-function openProduct(id) {
-  const p = products.find(x => x.id == id);
+    // ⭐ Estilos del modal ⭐
+    function injectModalStyles() {
+        if (document.getElementById('product-modal-styles')) return;
 
-  modalBody.innerHTML = `
-    <img src="${p.img}" class="modal-img">
-    <h2 id="modalTitle">${p.title}</h2>
-    <p>${p.desc}</p>
-    <p class="price">${p.price.toLocaleString()} COP</p>
-
-    <button class="btn primary"
-      onclick="location.href='../pagar/pagar.html?ref=${p.ref}&title=${encodeURIComponent(p.title)}&price=${p.price}&img=${encodeURIComponent(p.img)}'">
-      Pagar en línea
-    </button>
-  `;
-
-  modal.setAttribute("aria-hidden", "false");
-  modal.style.display = "block";
-}
-
-modalClose.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
-modal.addEventListener("click", e => {
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
+        const style = document.createElement('style');
+        style.id = 'product-modal-styles';
+        style.textContent = `
+            .product-modal { position: fixed; inset: 0; display:flex; justify-content:center; align-items:center; z-index:9999; }
+            .product-modal-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+            .product-modal-panel { position:relative; background:white; padding:20px; border-radius:10px; width:90%; max-width:1000px; display:flex; }
+            .product-modal-content { display:flex; gap:20px; }
+            .product-modal-left img { width:100%; max-width:350px; border-radius:10px; }
+            .btn { padding:10px 16px; border-radius:8px; border:none; cursor:pointer; background:#000; color:white; }
+            .btn.success { background:linear-gradient(90deg,#f59e0b,#ef4444); font-weight:bold; }
+            .btn.ghost { background:white; border:1px solid #ddd; color:#222; }
+            .modal-close { position:absolute; top:10px; right:10px; background:none; border:none; font-size:24px; cursor:pointer; }
+        `;
+        document.head.appendChild(style);
+    }
 });
