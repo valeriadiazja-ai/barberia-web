@@ -1,149 +1,194 @@
+/* main.js — Productos + modal "Ver" + carrito integrado (versión no invasiva)
+   Reemplaza completamente tu main.js con este archivo.
+*/
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ⭐ Productos
-    const products = [
-        { id: 'p1', title: 'Shampoo anticaspa', price: 22000, description: 'Limpieza profunda y control de caspa.', img: 'img/shampoo.jpg', category: 'cabello' },
-        { id: 'p2', title: 'Aceite para barba', price: 18000, description: 'Hidratación y brillo natural.', img: 'img/aceite.jpg', category: 'barba' },
-        { id: 'p3', title: 'After Shave', price: 20000, description: 'Calma y cuida la piel después del afeitado.', img: 'img/aftershave.jpg', category: 'piel' },
-        { id: 'p4', title: 'Cera para cabello', price: 25000, description: 'Fijación fuerte para estilos duraderos.', img: 'img/cera.jpg', category: 'cabello' },
-        { id: 'p5', title: 'Mascarilla facial', price: 15000, description: 'Limpieza profunda para el rostro.', img: 'img/mascarilla.jpg', category: 'piel' },
-        { id: 'p6', title: 'Peine profesional', price: 10000, description: 'Peine resistente y de calidad profesional.', img: 'img/peine.jpg', category: 'cabello' }
-    ];
+  // --- Productos (tu lista)
+  const products = [
+    { id: 'p1', title: 'Shampoo anticaspa', price: 22000, description: 'Limpieza profunda y control de caspa.', img: 'img/shampoo.jpg', category: 'cabello' },
+    { id: 'p2', title: 'Aceite para barba', price: 18000, description: 'Hidratación y brillo natural.', img: 'img/aceite.jpg', category: 'barba' },
+    { id: 'p3', title: 'After Shave', price: 20000, description: 'Calma y cuida la piel después del afeitado.', img: 'img/aftershave.jpg', category: 'piel' },
+    { id: 'p4', title: 'Cera para cabello', price: 25000, description: 'Fijación fuerte para estilos duraderos.', img: 'img/cera.jpg', category: 'cabello' },
+    { id: 'p5', title: 'Mascarilla facial', price: 15000, description: 'Limpieza profunda para el rostro.', img: 'img/mascarilla.jpg', category: 'piel' },
+    { id: 'p6', title: 'Peine profesional', price: 10000, description: 'Peine resistente y de calidad profesional.', img: 'img/peine.jpg', category: 'cabello' }
+  ];
 
-    const grid = document.getElementById('product-list');
-    const cartIcon = document.getElementById('cartIcon');
-    const cartModal = document.getElementById('cartModal');
-    const cartItems = document.getElementById('cartItems');
-    const cartTotal = document.getElementById('cartTotal');
-    const cartCount = document.getElementById('cartCount');
-    const closeCart = document.getElementById('closeCart');
-    const checkoutBtn = document.getElementById('checkoutBtn');
+  // --- Elementos del DOM (debe existir product-list, filterCategory, searchInput en tu HTML)
+  const grid = document.getElementById('product-list');
+  const filterCategory = document.getElementById('filterCategory');
+  const searchInput = document.getElementById('searchInput');
 
-    let cart = [];
+  // Carrito: elementos que deben existir en tu HTML (añadidos si no existen)
+  // Si aún no tienes en tu HTML el cartIcon/cartModal agregalos con el HTML que te pasé antes.
+  const cartIcon = document.getElementById('cartIcon');
+  const cartModal = document.getElementById('cartModal');
+  const cartItems = document.getElementById('cartItems');
+  const cartTotal = document.getElementById('cartTotal');
+  const cartCount = document.getElementById('cartCount');
+  const closeCart = document.getElementById('closeCart');
+  const checkoutBtn = document.getElementById('checkoutBtn');
 
-    // ⭐ Renderizar productos
-    function renderProducts(list) {
-        grid.innerHTML = list.map(p => `
-            <div class="card product-card">
-                <img src="${p.img}" alt="${p.title}" />
-                <h3>${p.title}</h3>
-                <p>${p.price.toLocaleString()} COP</p>
-                <button class="open-modal-btn" data-id="${p.id}">Ver</button>
-            </div>
-        `).join('');
-    }
+  // --- Estado del carrito (se carga desde localStorage si existe)
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
-    renderProducts(products);
+  // --- RENDER: productos (no modifica el resto de tu DOM/CSS)
+  function renderProducts(list) {
+    if (!grid) return;
+    grid.innerHTML = list.map(p => `
+      <div class="card product-card">
+        <img src="${p.img}" alt="${p.title}" />
+        <h3>${p.title}</h3>
+        <p>${p.price.toLocaleString()} COP</p>
+        <button class="open-modal-btn" data-id="${p.id}" type="button">Ver</button>
+      </div>
+    `).join('');
+  }
 
-    // ⭐ Filtro por categoría
-    document.getElementById('filterCategory').addEventListener('change', e => {
-        const category = e.target.value;
-        if(category === 'all') renderProducts(products);
-        else renderProducts(products.filter(p => p.category === category));
+  renderProducts(products);
+
+  // --- Filtrado por categoría
+  if (filterCategory) {
+    filterCategory.addEventListener('change', (e) => {
+      const category = e.target.value;
+      if (category === 'all') renderProducts(products);
+      else renderProducts(products.filter(p => p.category === category));
     });
+  }
 
-    // ⭐ Buscador
-    document.getElementById('searchInput').addEventListener('input', e => {
-        const text = e.target.value.toLowerCase();
-        const filtered = products.filter(p => p.title.toLowerCase().includes(text));
-        renderProducts(filtered);
+  // --- Buscador
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      renderProducts(products.filter(p => p.title.toLowerCase().includes(q)));
     });
+  }
 
-    // ⭐ Previsualización modal
-    document.body.addEventListener('click', e => {
-        const btn = e.target.closest('.open-modal-btn');
-        if(btn) openProductModal(btn.dataset.id);
+  // --- MODAL "VER" (delegación de eventos sobre grid)
+  // Usa un modal preexistente si lo tienes o crea uno temporalmente (no inyecta estilos globales).
+  function createModalIfNeeded() {
+    let m = document.getElementById('productPreviewModal');
+    if (m) return m;
+    m = document.createElement('div');
+    m.id = 'productPreviewModal';
+    m.style.display = 'none';
+    m.innerHTML = `
+      <div class="preview-backdrop" id="previewBackdrop"></div>
+      <div class="preview-panel" id="previewPanel" role="dialog" aria-modal="true">
+        <button id="previewClose" aria-label="Cerrar">×</button>
+        <div id="previewContent"></div>
+      </div>
+    `;
+    document.body.appendChild(m);
+    return m;
+  }
+
+  const previewModal = createModalIfNeeded();
+  const previewBackdrop = document.getElementById('previewBackdrop');
+  const previewPanel = document.getElementById('previewPanel');
+  const previewContent = document.getElementById('previewContent');
+
+  // Abrir modal con datos de producto
+  function openPreview(product) {
+    if (!previewModal) return;
+    previewContent.innerHTML = `
+      <div style="display:flex; gap:16px; align-items:flex-start;">
+        <img src="${product.img}" alt="${product.title}" style="width:160px; border-radius:8px;">
+        <div style="flex:1">
+          <h3 style="margin:0 0 6px">${product.title}</h3>
+          <p style="margin:0 0 6px">${product.description}</p>
+          <p style="margin:0 0 12px; font-weight:600">${product.price.toLocaleString()} COP</p>
+          <div style="display:flex; gap:8px;">
+            <button id="previewAddBtn" type="button">Agregar al carrito</button>
+            <button id="previewCloseBtn" type="button">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    `;
+    previewModal.style.display = 'flex';
+    // attach handlers (remove previous to avoid duplicates)
+    const addBtn = document.getElementById('previewAddBtn');
+    const closeBtn = document.getElementById('previewCloseBtn');
+    const closeX = document.getElementById('previewClose');
+
+    function onAdd() {
+      addToCart(product);
+      previewModal.style.display = 'none';
+      removeListeners();
+    }
+    function onClose() {
+      previewModal.style.display = 'none';
+      removeListeners();
+    }
+    function removeListeners() {
+      addBtn && addBtn.removeEventListener('click', onAdd);
+      closeBtn && closeBtn.removeEventListener('click', onClose);
+      closeX && closeX.removeEventListener('click', onClose);
+      previewBackdrop && previewBackdrop.removeEventListener('click', onClose);
+    }
+    addBtn && addBtn.addEventListener('click', onAdd);
+    closeBtn && closeBtn.addEventListener('click', onClose);
+    closeX && closeX.addEventListener('click', onClose);
+    previewBackdrop && previewBackdrop.addEventListener('click', onClose);
+  }
+
+  // Delegación de click en grid para abrir preview
+  if (grid) {
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.open-modal-btn');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const product = products.find(p => p.id === id);
+      if (product) openPreview(product);
     });
+  }
 
-    function openProductModal(id) {
-        const product = products.find(p => p.id === id);
-        if(!product) return;
+  // --- CARRITO (no modifica tu CSS de header; usa clases/IDs existentes)
+  function addToCart(product) {
+    cart.push(product);
+    saveAndRenderCart();
+  }
+  window.addToCart = addToCart; // expuesto si lo necesitas en inline onclicks (opcional)
 
-        let modal = document.querySelector('.product-modal');
-        if(modal) modal.remove();
+  function saveAndRenderCart() {
+    try { localStorage.setItem('cart', JSON.stringify(cart)); } catch (err) { /* ignore */ }
+    renderCart();
+  }
 
-        modal = document.createElement('div');
-        modal.className = 'product-modal';
-
-        modal.innerHTML = `
-            <div class="product-modal-backdrop"></div>
-            <div class="product-modal-panel" role="dialog" aria-modal="true">
-                <button class="modal-close" aria-label="Cerrar">×</button>
-                <div class="product-modal-content">
-                    <div class="product-modal-left">
-                        <img src="${product.img}" alt="${product.title}" />
-                    </div>
-                    <div class="product-modal-right">
-                        <h2>${product.title}</h2>
-                        <p class="price">${product.price.toLocaleString()} COP</p>
-                        <p class="desc">${product.description}</p>
-
-                        <div style="margin-top:18px; display:flex; gap:8px; flex-wrap:wrap">
-                            <button class="btn" onclick="addToCart({id:'${product.id}', title:'${product.title}', price:${product.price}, img:'${product.img}'})">Agregar al carrito</button>
-                            <button class="btn ghost" onclick="this.closest('.product-modal').remove()">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(modal);
-
-        modal.querySelector('.product-modal-backdrop').onclick = () => modal.remove();
-        modal.querySelector('.modal-close').onclick = () => modal.remove();
-    }
-
-    // ⭐ Carrito funcional
-    window.addToCart = function(product) {
-        cart.push(product);
-        updateCart();
-        alert(`"${product.title}" agregado al carrito`);
-    }
-
-    function updateCart() {
-        cartCount.textContent = cart.length;
-        cartItems.innerHTML = '';
-        let total = 0;
-        cart.forEach(p => {
-            total += p.price;
-            const li = document.createElement('li');
-            li.textContent = `${p.title} - ${p.price.toLocaleString()} COP`;
-            cartItems.appendChild(li);
-        });
-        cartTotal.textContent = total.toLocaleString();
-    }
-
-    cartIcon.addEventListener('click', () => cartModal.style.display = 'flex');
-    closeCart.addEventListener('click', () => cartModal.style.display = 'none');
-
-    checkoutBtn.addEventListener('click', () => {
-        if(cart.length === 0) { alert('Tu carrito está vacío'); return; }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        window.location.href = 'payment/pagar.html';
+  function renderCart() {
+    if (!cartItems || !cartTotal || !cartCount) return;
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach((p, idx) => {
+      total += p.price;
+      const li = document.createElement('li');
+      li.className = 'cart-item';
+      li.innerHTML = `<span>${p.title}</span><span>${p.price.toLocaleString()} COP</span>`;
+      cartItems.appendChild(li);
     });
+    cartTotal.textContent = total.toLocaleString();
+    cartCount.textContent = cart.length;
+  }
 
-    // ⭐ Estilos modal
-    function injectModalStyles() {
-        if(document.getElementById('product-modal-styles')) return;
+  // Carrito UI open/close
+  if (cartIcon) cartIcon.addEventListener('click', () => { if (cartModal) cartModal.style.display = 'flex'; });
+  if (closeCart) closeCart.addEventListener('click', () => { if (cartModal) cartModal.style.display = 'none'; });
 
-        const style = document.createElement('style');
-        style.id = 'product-modal-styles';
-        style.textContent = `
-            .product-modal { position: fixed; inset: 0; display:flex; justify-content:center; align-items:center; z-index:9999; }
-            .product-modal-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
-            .product-modal-panel { position:relative; background:white; padding:20px; border-radius:10px; width:90%; max-width:600px; display:flex; }
-            .product-modal-content { display:flex; gap:20px; }
-            .product-modal-left img { width:100%; max-width:250px; border-radius:10px; }
-            #cartIcon { position: fixed; bottom: 20px; right: 20px; background:#000; color:#fff; padding:12px 18px; border-radius:50px; cursor:pointer; z-index:999; }
-            #cartModal { display:none; position: fixed; inset:0; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999; }
-            #cartContent { background:white; padding:20px; border-radius:10px; width:90%; max-width:400px; }
-            #cartItems { list-style:none; padding:0; max-height:200px; overflow-y:auto; }
-            .btn { padding:10px 16px; border-radius:8px; border:none; cursor:pointer; background:#000; color:white; }
-            .btn.ghost { background:white; border:1px solid #ddd; color:#222; }
-            .modal-close { position:absolute; top:10px; right:10px; background:none; border:none; font-size:24px; cursor:pointer; }
-        `;
-        document.head.appendChild(style);
-    }
+  // Checkout -> pasar carrito completo a pagar.html guardando en localStorage
+  if (checkoutBtn) checkoutBtn.addEventListener('click', () => {
+    if (!cart || cart.length === 0) { alert('Tu carrito está vacío'); return; }
+    try { localStorage.setItem('cart', JSON.stringify(cart)); } catch (err) {}
+    window.location.href = 'payment/pagar.html';
+  });
 
-    injectModalStyles();
+  // carga inicial del carrito desde localStorage (si existe)
+  (function loadCartFromStorage() {
+    try {
+      const stored = JSON.parse(localStorage.getItem('cart') || '[]');
+      if (Array.isArray(stored) && stored.length > 0) cart = stored;
+    } catch (err) { cart = []; }
+    renderCart();
+  })();
+
+  // --- NOTA: No inyectamos estilos globales aquí. Para la apariencia del modal/carrito usa las reglas CSS que te doy.
 });
