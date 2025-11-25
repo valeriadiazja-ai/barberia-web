@@ -19,8 +19,16 @@
 
 /* Carrito flotante visible */
 #cartIcon {
-  position: fixed; top:20px; right:20px; cursor:pointer; font-size:18px; 
-  background:white; padding:5px 12px; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3); z-index:1000;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  background: white;
+  padding: 5px 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  z-index: 10000; /* Muy alto para quedar encima del header */
 }
 #cartCount {
   background:#ef4444; color:white; border-radius:50%; padding:2px 6px;
@@ -30,7 +38,7 @@
 /* Modal del carrito */
 #cartModal {
   display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
-  justify-content:center; align-items:center; z-index:10000;
+  justify-content:center; align-items:center; z-index:10001;
 }
 #cartContent {
   background:white; padding:20px; border-radius:10px; width:90%; max-width:500px;
@@ -79,7 +87,7 @@
   </div>
 </div>
 
-<!-- Carrito flotante visible -->
+<!-- Carrito flotante -->
 <div id="cartIcon">
   🛒 Carrito <span id="cartCount">0</span>
 </div>
