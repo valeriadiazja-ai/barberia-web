@@ -6,7 +6,6 @@
     <title>Productos — BarberX</title>
     <link rel="stylesheet" href="css/styles.css"/>
     <style>
-        /* Carrito en header */
         .cart-icon {
             position: relative;
             display: inline-block;
@@ -14,6 +13,7 @@
             font-size: 20px;
             color: #fff;
             text-decoration: none;
+            cursor: pointer;
         }
         .cart-icon span {
             position: absolute;
@@ -25,6 +25,16 @@
             padding: 2px 6px;
             font-size: 12px;
         }
+        .cart-modal { position: fixed; inset: 0; display:flex; justify-content:center; align-items:center; z-index:9999; }
+        .cart-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+        .cart-panel { position: relative; background:white; padding:20px; border-radius:10px; width:90%; max-width:600px; }
+        .cart-panel h2 { margin-top:0; }
+        .cart-item { display:flex; justify-content: space-between; align-items:center; margin-bottom:10px; }
+        .cart-item img { border-radius:5px; }
+        .btn { padding:8px 12px; border:none; border-radius:5px; cursor:pointer; }
+        .btn.success { background: linear-gradient(90deg,#f59e0b,#ef4444); color:white; }
+        .btn.ghost { background:white; border:1px solid #ddd; color:#222; }
+        .modal-close { position:absolute; top:10px; right:10px; background:none; border:none; font-size:24px; cursor:pointer; }
     </style>
 </head>
 <body>
@@ -36,7 +46,7 @@
                 <a href="productos.html">Productos</a>
                 <a href="citas.html">Agendar Cita</a>
             </nav>
-            <a href="#" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+            <a class="cart-icon">🛒 <span id="cartCount">0</span></a>
             <button class="nav-toggle" aria-controls="mainNav" aria-expanded="false">☰</button>
         </div>
     </header>
