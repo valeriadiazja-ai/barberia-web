@@ -1,0 +1,52 @@
+/* pagar.css - estilo visual barbería moderno */
+:root{
+  --bg:#0f1724;
+  --card:#fff;
+  --accent:#f59e0b;
+  --accent2:#ef4444;
+  --muted:#6b7280;
+}
+
+*{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Helvetica,Arial,sans-serif}
+body{margin:0;background:linear-gradient(180deg,#071023 0%, #0f1724 100%);color:#0b1220;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.pay-root{width:100%;max-width:1180px}
+.pay-header{display:flex;justify-content:flex-start;padding:10px 16px;margin-bottom:12px;color:#fff}
+.brand .logo{font-weight:800;font-size:22px;letter-spacing:1px}
+.brand .logo span{color:var(--accent);margin-left:4px}
+.brand .tag{font-size:12px;color:var(--muted)}
+
+.pay-card{display:flex;gap:20px;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 20px 60px rgba(2,6,23,0.6);align-items:stretch}
+.left{flex:0 0 42%;padding:12px;border-right:1px solid #f1f5f9}
+.right{flex:1;padding:12px}
+
+.product-preview{background:linear-gradient(135deg,#0b1220 0%, #1f2937 100%);padding:20px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.product-preview img{width:240px;max-width:100%;filter:grayscale(10%) contrast(1.05);border-radius:8px;transform:rotate(-6deg);transition:transform .35s}
+.product-preview:hover img{transform:rotate(0);}
+
+.product-info h1{margin:12px 0 6px;font-size:20px}
+.product-info p{margin:0;color:var(--muted)}
+.product-info .small{font-size:12px}
+
+form h3{margin:0 0 12px 0;color:#071022}
+.input-grid label{display:block;margin-bottom:10px;font-size:13px;color:#26303a}
+.input-grid input{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6;background:#fafcff;font-size:15px}
+
+.row{display:flex;gap:8px}
+.email input{background:#fff}
+
+.pay-actions{display:flex;gap:12px;align-items:center;margin-top:8px}
+.btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff}
+.btn.ghost{background:#fff;border:1px solid #e6e6e9;color:#111}
+
+.secure{margin-top:14px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.lock{background:linear-gradient(90deg,var(--accent),var(--accent2));padding:6px;border-radius:8px;color:#fff}
+
+.pay-footer{color:#fff;text-align:center;margin-top:12px;font-size:13px}
+.toast{position:fixed;right:24px;bottom:24px;padding:14px 18px;background:#101827;color:#fff;border-radius:10px;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+.hidden{display:none}
+@media(max-width:900px){
+  .pay-card{flex-direction:column}
+  .left{border-right:0}
+  .product-preview img{width:200px}
+}
