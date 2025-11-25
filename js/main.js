@@ -1,271 +1,127 @@
-// js/main.js
-// Contiene productos, renderizado, modal y lógica de citas.
-// Asegúrate de enlazarlo como "js/main.js" desde tus HTML.
+/* main.js - Reemplazar todo este archivo */
+document.addEventListener('DOMContentLoaded', () => {
+  // Ejemplo de productos. Si ya tienes un array/JSON en tu repo,
+  // intenta mantener la misma estructura y ajustar la propiedad `id`.
+  const products = [
+    { id: 'p1', title: 'Shampoo anticaspa', price: 22000, description: 'Limpieza profunda y control de caspa.', img: 'imagen/shampoo.jpg' },
+    { id: 'p2', title: 'Aceite para barba', price: 18000, description: 'Hidratación y brillo natural.', img: 'imagen/aceite.jpg' },
+    // agrega/ajusta según tu data real
+  ];
 
-const PRODUCTS = [
-    {
-        id: 'p1',
-        title: 'Cera para cabello',
-        price: 25000,
-        category: 'cabello',
-        img: 'img/cera.jpg',
-        desc: 'Textura fuerte, acabado mate. 100ml.'
-    },
-    {
-        id: 'p2',
-        title: 'Aceite para barba',
-        price: 30000,
-        category: 'barba',
-        img: 'img/aceite.jpg',
-        desc: 'Suaviza, protege y da brillo natural.'
-    },
-    {
-        id: 'p3',
-        title: 'Shampoo anticaspa',
-        price: 22000,
-        category: 'cabello',
-        img: 'img/shampoo.jpg',
-        desc: 'Limpieza profunda y control de caspa.'
-    },
-    {
-        id: 'p4',
-        title: 'Bálsamo aftershave',
-        price: 18000,
-        category: 'piel',
-        img: 'img/aftershave.jpg',
-        desc: 'Calma la piel tras el afeitado.'
-    },
-    {
-        id: 'p5',
-        title: 'Peine de madera',
-        price: 12000,
-        category: 'barba',
-        img: 'img/peine.jpg',
-        desc: 'Peine ergonómico, ideal para barbas.'
-    },
-    {
-        id: 'p6',
-        title: 'Mascarilla capilar',
-        price: 35000,
-        category: 'cabello',
-        img: 'img/mascarilla.jpg',
-        desc: 'Hidratación profunda y restauración.'
-    }
-];
-// utilities
-const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
-
-// NAV toggle (mobile)
-(function navToggle(){
-    const btn = document.querySelector('.nav-toggle');
-    const nav = document.querySelector('.main-nav');
-    if (!btn || !nav) return;
-    btn.addEventListener('click', ()=>{
-        const expanded = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!expanded));
-        nav.classList.toggle('show');
-    });
-})();
-
-// Format price
-function formatPrice(n){ return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' COP'; }
-
-// Render products into a container
-function renderProducts(targetId, items){
-    const container = document.getElementById(targetId);
-    if (!container) return;
-    container.innerHTML = items.map(p => `
-        <article class="product-card" data-id="${p.id}">
-            <img src="${p.img}" alt="${p.title}">
-            <h3>${p.title}</h3>
-            <div class="price">${formatPrice(p.price)}</div>
-            <p class="muted small">${p.desc}</p>
-            <div class="product-actions">
-                <button class="btn" data-action="view" data-id="${p.id}">Ver</button>
-                <button class="btn ghost" data-action="contact" data-id="${p.id}">Contacto</button>
-            </div>
-        </article>
+  // Render simple de productos (si ya tienes HTML, puedes omitir esta sección)
+  const grid = document.querySelector('.products-grid');
+  if (grid) {
+    grid.innerHTML = products.map(p => `
+      <div class="card product-card" data-id="${p.id}">
+        <img src="${p.img}" alt="${p.title}" />
+        <h3>${p.title}</h3>
+        <p>${p.price.toLocaleString()} COP</p>
+        <button class="open-modal-btn" data-id="${p.id}">Ver</button>
+      </div>
     `).join('');
-    // attach view listeners
-    $$('#' + targetId + ' [data-action="view"]').forEach(btn=>{
-        btn.addEventListener('click', e => {
-            const id = btn.dataset.id;
-            openProductModal(id);
-        });
-    });
-    $$('#' + targetId + ' [data-action="contact"]').forEach(btn=>{
-        btn.addEventListener('click', () => {
-            // ejemplo: abrir WhatsApp con texto (puedes personalizar)
-            const p = PRODUCTS.find(x => x.id === btn.dataset.id);
-            const text = encodeURIComponent(`Hola, quiero información sobre: ${p.title}`);
-            window.open(`https://wa.me/57?text=${text}`, '_blank');
-        });
-    });
-}
+  }
 
-// Show featured (first 4)
-(function initFeatured(){
-    const featured = PRODUCTS.slice(0,4);
-    renderProducts('featured-products', featured);
-})();
-
-// If product-list exists, render all + add filters
-(function initProductsPage(){
-    if (!document.getElementById('product-list')) return;
-    renderProducts('product-list', PRODUCTS);
-    const filter = document.getElementById('filterCategory');
-    const search = document.getElementById('searchInput');
-
-    function applyFilters(){
-        const cat = filter.value;
-        const q = (search.value || '').toLowerCase().trim();
-        const filtered = PRODUCTS.filter(p=>{
-            const byCat = (cat === 'all') || (p.category === cat);
-            const byQ = !q || p.title.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
-            return byCat && byQ;
-        });
-        renderProducts('product-list', filtered);
+  // Asignar listeners a los botones para abrir modal
+  document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('.open-modal-btn');
+    if (btn) {
+      const id = btn.getAttribute('data-id');
+      openProductModal(id);
     }
+  });
 
-    if (filter) filter.addEventListener('change', applyFilters);
-    if (search) search.addEventListener('input', applyFilters);
-})();
+  // Función principal: abre modal con la info del producto.
+  window.openProductModal = function openProductModal(id) {
+    const product = products.find(p => p.id === id);
+    if (!product) return console.warn('Producto no encontrado', id);
 
-// PRODUCT MODAL
-function openProductModal(id){
-    const product = PRODUCTS.find(p => p.id === id);
-    if (!product) return;
-    const modal = document.getElementById('productModal');
-    const modalBody = modal.querySelector('#modalBody') || modal.querySelector('#modalBody2');
-    modalBody.innerHTML = `
-        <div style="display:flex;gap:18px;flex-wrap:wrap">
-            <div style="flex:1;min-width:260px">
-                <img src="${product.img}" alt="${product.title}" style="width:100%;border-radius:8px;object-fit:cover;max-height:420px">
+    // Crear modal (si ya existe, lo reemplazamos)
+    let modal = document.querySelector('.product-modal');
+    if (modal) modal.remove();
+
+    modal = document.createElement('div');
+    modal.className = 'product-modal';
+    modal.innerHTML = `
+      <div class="product-modal-backdrop"></div>
+      <div class="product-modal-panel" role="dialog" aria-modal="true">
+        <button class="modal-close" aria-label="Cerrar">×</button>
+        <div class="product-modal-content">
+          <div class="product-modal-left">
+            <img src="${product.img}" alt="${product.title}" />
+          </div>
+          <div class="product-modal-right">
+            <h2>${product.title}</h2>
+            <p class="price">${product.price.toLocaleString()} COP</p>
+            <p class="desc">${product.description}</p>
+
+            <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn" id="btnComprar">Comprar</button>
+              <button class="btn success" id="btnPagar">Pagar en línea</button>
+              <button class="btn ghost" id="btnCerrar">Cerrar</button>
             </div>
-            <div style="flex:1;min-width:260px">
-                <h2 id="modalTitle">${product.title}</h2>
-                <div style="font-weight:700;margin:8px 0">${formatPrice(product.price)}</div>
-                <p>${product.desc}</p>
-                <div style="margin-top:18px;display:flex;gap:8px">
-                    <button class="btn" id="btnComprar">Comprar</button>
-                    <button class="btn ghost" id="btnCerrar">Cerrar</button>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     `;
-    // open
-    modal.setAttribute('aria-hidden','false');
-    // close handlers
-    const closeModal = ()=>{
-        modal.setAttribute('aria-hidden','true');
-    };
-    modal.querySelector('#btnCerrar').addEventListener('click', closeModal);
-    modal.querySelector('#btnComprar').addEventListener('click', ()=>{
-        // ejemplo: abrir WhatsApp pedir compra
-        const text = encodeURIComponent(`Hola, quiero comprar: ${product.title} - ${formatPrice(product.price)}`);
-        window.open(`https://wa.me/57?text=${text}`, '_blank');
+
+    document.body.appendChild(modal);
+
+    // estilos rápidos (si tu CSS ya controla, omite)
+    injectModalStyles();
+
+    const backdrop = modal.querySelector('.product-modal-backdrop');
+    const btnCerrar = modal.querySelector('#btnCerrar');
+    const closeX = modal.querySelector('.modal-close');
+
+    backdrop.addEventListener('click', () => modal.remove());
+    btnCerrar.addEventListener('click', () => modal.remove());
+    closeX.addEventListener('click', () => modal.remove());
+
+    // BOTÓN COMPRAR (puedes personalizar)
+    const btnComprar = modal.querySelector('#btnComprar');
+    btnComprar.addEventListener('click', () => {
+      alert(`Has añadido "${product.title}" al carrito (simulado).`);
+      modal.remove();
     });
-    const btnClose = modal.querySelector('.modal-close');
-    if (btnClose) btnClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e)=>{
-        if (e.target === modal) closeModal();
+
+    // PAGAR EN LÍNEA -> abre la pasarela de pago con parámetros en querystring
+    const btnPagar = modal.querySelector('#btnPagar');
+    btnPagar.addEventListener('click', () => {
+      const referencia = encodeURIComponent(product.id);
+      const nombre = encodeURIComponent(product.title);
+      const valor = product.price;
+      // Ruta local en tu repo: /payment/pagar.html
+      window.location.href = `/payment/pagar.html?ref=${referencia}&producto=${nombre}&valor=${valor}`;
     });
-}
+  };
 
-// Citas: guardar en localStorage y gestión
-(function citasLogic(){
-    const form = document.getElementById('formCita');
-    if (!form) return;
-
-    const nombre = document.getElementById('nombre');
-    const telefono = document.getElementById('telefono');
-    const fecha = document.getElementById('fecha');
-    const hora = document.getElementById('hora');
-    const servicio = document.getElementById('servicio');
-    const mensaje = document.getElementById('mensaje');
-    const listaSection = document.getElementById('listaCitas');
-    const citasUl = document.getElementById('citasUl');
-    const verCitas = document.getElementById('verCitas');
-    const clearBtn = document.getElementById('clearCitas');
-
-    function loadCitas(){
-        const raw = localStorage.getItem('barberx_citas');
-        return raw ? JSON.parse(raw) : [];
+  // Inyecta estilos mínimos para el modal si no los tienes
+  function injectModalStyles() {
+    if (document.getElementById('product-modal-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'product-modal-styles';
+    style.innerHTML = `
+    .product-modal { position: fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; }
+    .product-modal-backdrop{ position: absolute; inset:0; background: rgba(0,0,0,0.45); }
+    .product-modal-panel{ position: relative; width: 90%; max-width: 1100px; background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 8px 40px rgba(0,0,0,0.4); display:flex; align-items:center; }
+    .product-modal-content{ display:flex; gap: 20px; width:100%; }
+    .product-modal-left img{ width: 100%; max-width:420px; border-radius:10px; object-fit:contain; }
+    .product-modal-left{ flex:1; display:flex; align-items:center; justify-content:center; }
+    .product-modal-right{ flex:1; padding: 8px 12px; }
+    .product-modal-right h2{ margin:0 0 10px 0; font-size:28px; }
+    .product-modal-right .price{ font-weight:700; margin:6px 0 12px 0; }
+    .product-modal-right .desc{ color:#444; margin-bottom:12px; }
+    .modal-close{ position:absolute; right:14px; top:10px; background:transparent;border:0;font-size:24px;cursor:pointer; }
+    .btn{ padding:10px 16px; border-radius:10px; border:0; cursor:pointer; background:#0b1720; color:#fff; }
+    .btn.ghost{ background:#fff; border:1px solid #e6e6e6; color:#222; }
+    .btn.success{ background: linear-gradient(90deg,#f59e0b,#ef4444); color:#fff; font-weight:700; }
+    @media(max-width:800px){
+      .product-modal-panel{ padding:12px; }
+      .product-modal-content{ flex-direction:column; }
+      .product-modal-left img{ max-width: 320px; }
     }
-    function saveCitas(arr){ localStorage.setItem('barberx_citas', JSON.stringify(arr)); }
-
-    function renderCitas(){
-        const arr = loadCitas();
-        if (!citasUl) return;
-        if (arr.length === 0){
-            citasUl.innerHTML = '<li>No hay citas guardadas</li>';
-            return;
-        }
-        citasUl.innerHTML = arr.map((c, idx) => `
-            <li>
-                <strong>${c.nombre}</strong> — ${c.servicio} <br/>
-                ${c.fecha} ${c.hora} · ${c.telefono}
-                <div style="margin-top:6px"><button data-index="${idx}" class="btn ghost small remove">Eliminar</button></div>
-            </li>
-        `).join('');
-        $$('#citasUl .remove').forEach(btn=>{
-            btn.addEventListener('click', (ev)=>{
-                const i = Number(btn.dataset.index);
-                const arr = loadCitas();
-                arr.splice(i,1);
-                saveCitas(arr);
-                renderCitas();
-            });
-        });
-    }
-
-    form.addEventListener('submit', (e)=>{
-        e.preventDefault();
-        // basic validation
-        if (!nombre.value.trim() || !telefono.value.trim() || !fecha.value || !hora.value) {
-            mensaje.innerText = 'Por favor completa todos los campos.';
-            mensaje.style.color = 'crimson';
-            return;
-        }
-        // create appointment
-        const cita = {
-            nombre: nombre.value.trim(),
-            telefono: telefono.value.trim(),
-            fecha: fecha.value,
-            hora: hora.value,
-            servicio: servicio.value
-        };
-        const arr = loadCitas();
-        arr.push(cita);
-        saveCitas(arr);
-        mensaje.innerText = `✔️ Cita registrada para ${cita.fecha} a las ${cita.hora}`;
-        mensaje.style.color = 'green';
-        form.reset();
-        renderCitas();
-    });
-
-    verCitas.addEventListener('click', ()=>{
-        listaSection.classList.toggle('hidden');
-        renderCitas();
-    });
-
-    if (clearBtn) clearBtn.addEventListener('click', ()=>{
-        if (!confirm('¿Borrar todas las citas?')) return;
-        localStorage.removeItem('barberx_citas');
-        renderCitas();
-    });
-
-    // initial render if section visible
-    if (!listaSection.classList.contains('hidden')) renderCitas();
-})();
-
-// If there are multiple modals in page, close buttons bind (safety)
-window.addEventListener('DOMContentLoaded', ()=>{
-    $$('.modal .modal-close').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-            const modal = btn.closest('.modal');
-            if (modal) modal.setAttribute('aria-hidden','true');
-        });
-    });
+    `;
+    document.head.appendChild(style);
+  }
 });
+
