@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ⭐ Aquí van TODOS tus productos reales ⭐
+    // ⭐ Productos
     const products = [
         { id: 'p1', title: 'Shampoo anticaspa', price: 22000, description: 'Limpieza profunda y control de caspa.', img: 'img/shampoo.jpg', category: 'cabello' },
         { id: 'p2', title: 'Aceite para barba', price: 18000, description: 'Hidratación y brillo natural.', img: 'img/aceite.jpg', category: 'barba' },
@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'p6', title: 'Peine profesional', price: 10000, description: 'Peine resistente y de calidad profesional.', img: 'img/peine.jpg', category: 'cabello' }
     ];
 
-    // 📌 Renderizar productos
     const grid = document.getElementById('product-list');
 
+    // 📌 Renderizar productos
     function renderProducts(list) {
         grid.innerHTML = list.map(p => `
             <div class="card product-card">
@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 📌 BUSCADOR
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const text = e.target.value.toLowerCase();
-        const filtered = products.filter(p => p.title.toLowerCase().includes(text));
-        renderProducts(filtered);
+        renderProducts(products.filter(p => p.title.toLowerCase().includes(text)));
     });
 
     // 📌 CLICK para abrir modal
@@ -46,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btn) openProductModal(btn.dataset.id);
     });
 
-    // ⭐ Modal de producto ⭐
+    // ⭐ Modal de producto
     function openProductModal(id) {
         const product = products.find(p => p.id === id);
         if (!product) return;
@@ -87,19 +86,19 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.querySelector('.modal-close').onclick = () => modal.remove();
         modal.querySelector('#btnCerrar').onclick = () => modal.remove();
 
-        // ❗ Botón COMPRAR (opcional)
+        // ✅ Botón COMPRAR
         modal.querySelector('#btnComprar').onclick = () => {
             alert(`Has añadido "${product.title}" al carrito.`);
             modal.remove();
         };
 
-        // ❗ Botón PAGAR EN LÍNEA
+        // ✅ Botón PAGAR EN LÍNEA
         modal.querySelector('#btnPagar').onclick = () => {
             window.location.href = `payment/pagar.html?ref=${product.id}&producto=${encodeURIComponent(product.title)}&valor=${product.price}`;
         };
     }
 
-    // ⭐ Estilos del modal ⭐
+    // ⭐ Estilos del modal
     function injectModalStyles() {
         if (document.getElementById('product-modal-styles')) return;
 
